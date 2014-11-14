@@ -34,8 +34,8 @@ function formSubmit(titleId) {
      ****************************************************/
 
     // CHANGE this to connect to your own MySQL instance in the labs or on your own computer
-    $connection = new mysqli("dbserver.ugrad.cs.ubc.ca", "e5q8", "a62436084", "bookbiz");
-
+ //   $connection = new mysqli("localhost", "root", "", "CPSC304");
+    require_once("includes/connection.php");
     // Check that the connection was successful, otherwise exit
     if (mysqli_connect_errno()) {
         printf("Connect failed: %s\n", mysqli_connect_error());
@@ -61,10 +61,10 @@ function formSubmit(titleId) {
         */
        
        // Create a delete query prepared statement with a ? for the title_id
-       $stmt = $connection->prepare("DELETE FROM titles WHERE title_id=?");
-       $deleteTitleID = $_POST['title_id'];
+       $stmt = $connection->prepare("DELETE FROM Item WHERE upc=?");
+       $deleteUPC = $_POST['upc'];
        // Bind the title_id parameter, 's' indicates a string value
-       $stmt->bind_param("s", $deleteTitleID);
+       $stmt->bind_param("s", $deleteUPC);
        
        // Execute the delete statement
        $stmt->execute();
@@ -72,21 +72,21 @@ function formSubmit(titleId) {
        if($stmt->error) {
          printf("<b>Error: %s.</b>\n", $stmt->error);
        } else {
-         echo "<b>Successfully deleted ".$deleteTitleID."</b>";
+         echo "<b>Successfully deleted ".$deleteUPC."</b>";
        }
             
       } elseif (isset($_POST["submit"]) && $_POST["submit"] ==  "ADD") {       
        /*
         Add a book title using the post variables title_id, title and pub_id.
         */
-        $title_id = $_POST["new_title_id"];
+        $upc = $_POST["new_upc"];
         $title = $_POST["new_title"];
-        $pub_id = $_POST["new_pub_id"];
+        $company = $_POST["new_company"];
           
-        $stmt = $connection->prepare("INSERT INTO titles (title_id, title, pub_id) VALUES (?,?,?)");
+        $stmt = $connection->prepare("INSERT INTO Item (upc, title, company) VALUES (?,?,?)");
           
         // Bind the title and pub_id parameters, 'sss' indicates 3 strings
-        $stmt->bind_param("sss", $title_id, $title, $pub_id);
+        $stmt->bind_param("sss", $upc, $title, $company);
         
         // Execute the insert statement
         $stmt->execute();
@@ -106,9 +106,9 @@ function formSubmit(titleId) {
 <!-- Create the table column headings -->
 
 <tr valign=center>
-<td class=rowheader>Title ID</td>
+<td class=rowheader>UPC</td>
 <td class=rowheader>Title</td>
-<td class=rowheader>Publisher ID</td>
+<td class=rowheader>Company</td>
 <td class=rowheader>Price</td>
 </tr>
 
@@ -119,8 +119,8 @@ function formSubmit(titleId) {
      ****************************************************/
 
    // Select all of the book rows columns title_id, title and pub_id
-    if (!$result = $connection->query("SELECT title_id, title, pub_id, price FROM titles ORDER BY title")) {
-        die('There was an error running the query [' . $db->error . ']');
+    if (!$result = $connection->query("SELECT upc, title, company, price FROM Item ORDER BY title")) {
+        die('There was an error running the query [' . $connection->error . ']');
     }
 
     // Avoid Cross-site scripting (XSS) by encoding PHP_SELF (this page) using htmlspecialchars.
@@ -128,7 +128,7 @@ function formSubmit(titleId) {
     echo htmlspecialchars($_SERVER["PHP_SELF"]);
     echo "\" method=\"POST\">";
     // Hidden value is used if the delete link is clicked
-    echo "<input type=\"hidden\" name=\"title_id\" value=\"-1\"/>";
+    echo "<input type=\"hidden\" name=\"upc\" value=\"-1\"/>";
    // We need a submit value to detect if delete was pressed 
     echo "<input type=\"hidden\" name=\"submitDelete\" value=\"DELETE\"/>";
 
@@ -139,13 +139,13 @@ function formSubmit(titleId) {
     // Display each book title databaserow as a table row
     while($row = $result->fetch_assoc()){
         
-       echo "<td>".$row['title_id']."</td>";
+       echo "<td>".$row['upc']."</td>";
        echo "<td>".$row['title']."</td>";
-       echo "<td>".$row['pub_id']."</td>";
+       echo "<td>".$row['company']."</td>";
 	   echo "<td>".$row['price']."</td><td>";
        
        //Display an option to delete this title using the Javascript function and the hidden title_id
-       echo "<a href=\"javascript:formSubmit('".$row['title_id']."');\">DELETE</a>";
+       echo "<a href=\"javascript:formSubmit('".$row['upc']."');\">DELETE</a>";
        echo "</td></tr>";
         
     }
@@ -172,9 +172,9 @@ function formSubmit(titleId) {
 
 <form id="add" name="add" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
     <table border=0 cellpadding=0 cellspacing=0>
-        <tr><td>Book Title ID</td><td><input type="text" size=30 name="new_title_id"</td></tr>
+        <tr><td>UPC</td><td><input type="text" size=30 name="new_upc"</td></tr>
         <tr><td>Book Title</td><td><input type="text" size=30 name="new_title"</td></tr>
-        <tr><td>Publisher ID:</td><td> <input type="text" size=5 name="new_pub_id"></td></tr>
+        <tr><td>Company Name:</td><td> <input type="text" size=5 name="new_company"></td></tr>
         <tr><td>Price:</td><td> <input type="text" size=5 name="new_price"></td></tr>
         <tr><td></td><td><input type="submit" name="submit" border=0 value="ADD"></td></tr>
     </table>
