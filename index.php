@@ -27,6 +27,37 @@ function formSubmit(titleId) {
 </head>
 
 <body>
+
+<?php
+include('login.php'); // include login script
+?>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Login Form in PHP with Session
+    </title>
+    <link href = "style.css" rel = "stylesheet" type = "text/css">
+</head>
+<body>
+<div id="main">
+    <h1>PHP login session</h1>
+    <div id="login">
+    <h2>Login Form</h2>
+    <form action="" method="post">
+    <label>Username :</label>
+    <input id="name" name="username" placeholder="username" type="text">
+    <label>Password</label>
+    <input id="password" name="password" placeholder="**********" type="password">
+    <input name="submit" type="submit" value="Login ">
+    <span><?php echo $error; ?></span>
+        </form>
+        </div>
+</div>
+</body>
+</html>
+
+?>
 <h1>Manage Book Inventory</h1>
 <?php
     /****************************************************
