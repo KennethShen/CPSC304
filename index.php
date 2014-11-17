@@ -28,11 +28,7 @@ function formSubmit(titleId) {
 
 <body>
 
-<?php
-include('login.php'); // include login script
-?>
-<!DOCTYPE html>
-<html>
+
 <head>
     <title>
         Login Form in PHP with Session
@@ -55,9 +51,9 @@ include('login.php'); // include login script
         </div>
 </div>
 </body>
-</html>
 
-?>
+
+
 <h1>Manage Book Inventory</h1>
 <?php
     /****************************************************
