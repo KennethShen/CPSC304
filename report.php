@@ -4,7 +4,7 @@
         var $date = new Date('Y-m-d', strtotime($dateString));
         var $queryString = "SELECT upc, category, price, quantity " +
         "FROM Purchase p, Item i, PurchaseItem pi" +
-        "WHERE Date(date) = '{$date]' ORDER BY upc"
+        "WHERE Date(date) = '{$date}' ORDER BY upc"
         if(!$result = $connection->query($queryString)){
             die('Error running the query: '. $db->error. '.');
         }
@@ -21,3 +21,13 @@ if(mysqli_connect_errno()){
 }
 
 ?>
+<html>
+<body>
+<form action = "dailyReport.php" method = "post">
+    Year: <input type = "text" name = "year"><br>
+    Month: <input type = "text" name = "month"><br>
+    Day: <input type = "text" name = "day"><br>
+    <input type = "submit">
+</form>
+</body>
+</html>
