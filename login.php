@@ -5,6 +5,7 @@
  * Date: 2014-11-13
  * Time: 8:34 PM
  */
+require_once("includes/connection.php");
 session_start(); //starting session
 $error=''; //variable to store error message
 
@@ -23,7 +24,7 @@ if(isset($_POST[submit])) {
 
         try {
             //Establish connection with server by passing server_name, user_id, pw as param
-            $connection = mysql_connect("localhost", "root", "");
+            //$connection = mysql_connect("localhost", "root", "");
 
             //Protect MySql injection for security
             $username = stripslashes($username);
@@ -37,7 +38,7 @@ if(isset($_POST[submit])) {
         }
 
         catch(PDOException $e) {
-            ecjp $sql . "<br>" . $e->getMessage();
+            echo $sql . "<br>" . $e->getMessage();
         }
 
         //Select database
