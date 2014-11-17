@@ -6,10 +6,13 @@
  * Time: 8:34 PM
  */
 require_once("includes/connection.php");
+include_once("includes/header.php");
 session_start(); //starting session
 $error=''; //variable to store error message
 
-if(isset($_POST[submit])) {
+
+
+if(isset($_POST['submit'])) {
     if(empty($_POST['username']) || empty($_POST['password'])) {
         $error = "Username or Password is invalid";
     }
@@ -58,3 +61,31 @@ if(isset($_POST[submit])) {
     }
 }
 ?>
+
+
+<!DOCTYPE html>
+<html>
+<head>
+        <title>
+                Login Form in PHP with Session
+            </title>
+        <link href = "style.css" rel = "stylesheet" type = "text/css">
+    </head>
+<body>
+<div id="main">
+        <h1>PHP login session</h1>
+        <div id="login">
+            <h2>Login Form</h2>
+            <form action="" method="post">
+                <label>Username :</label>
+                <input id="name" name="username" placeholder="username" type="text">
+                <label>Password</label>
+                <input id="password" name="password" placeholder="**********" type="password">
+                <input name="submit" type="submit" value="Login ">
+                <span><?php echo $error; ?></span>
+                    </form>
+                </div>
+    </div>
+</body>
+</html>
+
