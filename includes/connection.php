@@ -6,6 +6,7 @@
     $dbname = "CPSC304";
 
 
+    global $connection;
     $connection = new mysqli($dbhost, $dbuser, $dbpassword, $dbname);
 
     // Check that the connection was successful, otherwise exit

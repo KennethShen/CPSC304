@@ -36,9 +36,10 @@ CREATE TABLE IF NOT EXISTS HasSong (
     	ON DELETE CASCADE
     );
         
--- Customer(cid, password, name, address, phone)
+-- Customer(cid, username, password, name, address, phone)
 CREATE TABLE IF NOT EXISTS Customer (
 cid INTEGER,
+	username VARCHAR(24) UNIQUE,
   	password VARCHAR(24),
 	name CHAR(30),
 	address VARCHAR(30),

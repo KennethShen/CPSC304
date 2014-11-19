@@ -60,6 +60,9 @@ if(isset($_POST['submit'])) {
         mysql_close($connection); //Closing connection
     }
 }
+
+
+
 ?>
 
 
@@ -77,11 +80,12 @@ if(isset($_POST['submit'])) {
         <div id="login">
             <h2>Login Form</h2>
             <form action="" method="post">
-                <label>Username :</label>
+                <label>Username :</label><br>
                 <input id="name" name="username" placeholder="username" type="text">
-                <label>Password</label>
+                <label>Password</label><br>
                 <input id="password" name="password" placeholder="**********" type="password">
                 <input name="submit" type="submit" value="Login ">
+                <a href="/CPSC304/includes/registration.php"><button type="button">Register</button></a>
                 <span><?php echo $error; ?></span>
                     </form>
                 </div>
