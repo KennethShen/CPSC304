@@ -8,12 +8,13 @@ if(mysqli_connect_errno()){
 }
 function getDailySalesReport($year, $month, $day) {
     global $connection;
+    global $result;
     $dateString = $year."-".$month."-".$day;
-    $date = new Date('Y-m-d', strtotime($dateString));
-    $queryString = "SELECT upc, category, price, sum(quantity) " .
-        "FROM Purchase p, Item i, PurchaseItem pi" .
-        "WHERE Date(date) = '{$date}', pi.upc = i.upc, pi.receiptId = p.receiptId,
-         GROUP BY upc ORDER BY ";
+    $date = date_create($dateString);
+    $queryString = "SELECT i.upc, i.category, i.price, sum(quantity) " .
+        "FROM Purchase p, Item i, PurchaseItem pi " .
+        "WHERE p.date = '$dateString' AND pi.upc = i.upc AND pi.receiptId = p.receiptId
+         GROUP BY i.upc";
     if(!$result = $connection->query($queryString)){
         die('Error running the query.');
     }
@@ -38,6 +39,7 @@ function getDailySalesReport($year, $month, $day) {
             echo "<td>".$row['sum(quantity)']."</td>";
             echo "<td>".$row['upc']."</td>";
         }
+    echo "</table>";
     mysqli_close($connection);
     ?>
 </table>
