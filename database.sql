@@ -122,21 +122,21 @@ INSERT INTO Item
 VALUES(123, 'two', 'CD', 'classical','Gods Hand', 2014, 15.50, 50);
 
 INSERT INTO Customer
-VALUES(333, '233', 'Justin Bieber', 'somewhere', 50238);
+VALUES(333,'name', '233', 'Justin Bieber', 'somewhere', 50238);
 INSERT INTO Customer
-VALUES(334, 'password', 'Kenneth', 'home', 56132);
+VALUES(334,'Bieber', 'password', 'Kenneth', 'home', 56132);
 INSERT INTO Customer
-VALUES(335, '1234', 'Olivia', 'Mars', 231823);
+VALUES(335,'something', '1234', 'Olivia', 'Mars', 231823);
 INSERT INTO Customer
-VALUES(336, '4321', 'April', 'Sun', 135155);
+VALUES(336, 'thatthing', '4321', 'April', 'Sun', 135155);
 INSERT INTO Customer
-VALUES(337, 'something', 'Daniel', 'Canada', 16555);
+VALUES(337, 'aname', 'something', 'Daniel', 'Canada', 16555);
 INSERT INTO Customer
-VALUES(338, 'thatthing', 'Tom', 'nowhere', 549412);
+VALUES(338, 'thatname', 'thatthing', 'Tom', 'nowhere', 549412);
 INSERT INTO Customer
-VALUES(339, 'dunno', 'Bob', 'there', 515161);
+VALUES(339, 'toolazy', 'dunno', 'Bob', 'there', 515161);
 INSERT INTO Customer
-VALUES(340, 'whaatever', 'George', 'here', 575415);
+VALUES(340, 'somdsa', 'whaatever', 'George', 'here', 575415);
 
 INSERT INTO Purchase
 VALUES(222, CURRENT_DATE(),	333, 16516161, CURRENT_DATE()+10, CURRENT_DATE()+5, CURRENT_DATE()+2);
