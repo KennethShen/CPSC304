@@ -5,7 +5,6 @@
 	
 <?php
 	session_start();
-
 	//empty cart by destroying current session
 	//if(isset($_GET["emptycart"]) && $_GET["emptycart"]==1) {
    	 //$return_url = base64_decode($_GET["return_url"]); //return url
@@ -15,14 +14,16 @@
 	//}
 
 	//add item in shopping cart
-	if(!empty($_POST["title"]) && $_POST["title"]=='add'){
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+	if(!empty($_POST["type"]) && $_POST["type"]=='ADD')
 	
-    $upc = filter_var($_POST["upc"], FILTER_SANITIZE_STRING); 
-    $quantity = filter_var($_POST["quantity"], FILTER_SANITIZE_NUMBER_INT);
+    $upc = $_POST["upc"]; 
+    $quantity = $_POST["quantity"];
     $return_url = base64_decode($_POST["return_url"]);
 
     //MySqli query - get details of item from db using item upc HAVE TO EDIT LATER: ITEM REFERENCE NEEDED
-    $results = $connection->query("SELECT item_title, price FROM item WHERE item_upc ='$item_upc'");
+    $results = $connection->query("SELECT title, price FROM Item WHERE upc ='$upc'");
     $obj = $results->fetch_object();
     
     if ($results) { //we have the item info 
@@ -58,7 +59,7 @@
             $_SESSION["Item"] = $new_item;
         } 
     }
-    
+
     //redirect back to original page
   	 //header('Location:'.$return_url);
 
