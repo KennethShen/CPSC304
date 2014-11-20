@@ -33,7 +33,7 @@
         */
        
        // Create a delete query prepared statement with a ? for the item_upc
-       $stmt = $connection->prepare("DELETE FROM Item WHERE item_upc=?");
+       $stmt = $connection->prepare("DELETE FROM Item WHERE upc=?");
        $deleteUPC = $_POST['item_upc'];
        // Bind the title_id parameter, 's' indicates a string value
        $stmt->bind_param("s", $deleteUPC);
@@ -44,7 +44,7 @@
        if($stmt->error) {
          printf("<b>Error: %s.</b>\n", $stmt->error);
        } else {
-         echo "<b>Successfully deleted ".$deleteTitleID."</b>";
+         echo "<b>Successfully deleted ".$deleteUPC."</b>";
        }
             
       } elseif (isset($_POST["submit"]) && $_POST["submit"] ==  "ADD") {       
@@ -163,10 +163,10 @@
 <script>
 function formSubmit(titleId) {
     'use strict';
-    if (confirm('Are you sure you want to delete this title?')) {
+    if (confirm('Are you sure you want to delete this item?')) {
       // Set the value of a hidden HTML element in this form
       var form = document.getElementById('delete');
-      form.title_id.value = titleId;
+      form.item_upc.value = titleId;
       // Post this form
       form.submit();
     }
