@@ -1,4 +1,4 @@
-@import http://fonts.googleapis.com/css?family=Raleway;
+
 /*----------------------------------------------
 CSS Settings For HTML Div ExactCenter
 ------------------------------------------------*/
@@ -8,7 +8,7 @@ CSS Settings For HTML Div ExactCenter
     font-family:raleway
 }
 span {
-    color:red
+    color:red;
 }
 h2 {
     background-color:#FEFFED;
@@ -43,6 +43,20 @@ input[type=text],input[type=password] {
 }
 input[type=submit] {
     width:100%;
+    background-color:#FFBC00;
+    color:#fff;
+    border:2px solid #FFCB00;
+    padding:10px;
+    font-size:20px;
+    cursor:pointer;
+    border-radius:5px;
+    margin-bottom:15px
+}
+
+button {
+    font-family:raleway
+    width:100%;
+    width:300px;
     background-color:#FFBC00;
     color:#fff;
     border:2px solid #FFCB00;
