@@ -107,11 +107,11 @@ VALUES(115, 'ka', 'CD', 'classical','Gods Hand', 2014, 52.68, 50);
 INSERT INTO Item
 VALUES(116, 'lol', 'CD', 'classical','Gods Hand', 2014, 42.50, 50);
 INSERT INTO Item
-VALUES(117, 'he', 'CD', 'classical','Gods Hand', 2014, 996.0, 50);
+VALUES(117, 'he', 'CD', 'classical','Gods Hand', 2014, 96.0, 50);
 INSERT INTO Item
-VALUES(118, 'ka', 'CD', 'classical','Gods Hand', 2014, 55555.00, 50);
+VALUES(118, 'ka', 'CD', 'classical','Gods Hand', 2014, 55.00, 50);
 INSERT INTO Item
-VALUES(119, 'something', 'CD', 'classical','Gods Hand', 2014, 582.20, 50);
+VALUES(119, 'something', 'CD', 'classical','Gods Hand', 2014, 58.20, 50);
 INSERT INTO Item
 VALUES(120, 'nothing', 'CD', 'classical','Gods Hand', 2014, 15.45, 50);
 INSERT INTO Item
@@ -188,7 +188,7 @@ VALUES(231, 118, 50);
 INSERT INTO PurchaseItem
 VALUES(232, 111, 32);
 INSERT INTO PurchaseItem
-VALUES(233, 113, 74);
+VALUES(233, 113, 20);
 INSERT INTO PurchaseItem
 VALUES(234, 116, 12);
 INSERT INTO PurchaseItem
@@ -202,8 +202,8 @@ VALUES(238, 117, 8);
 INSERT INTO PurchaseItem
 VALUES(239, 113, 12);
 INSERT INTO PurchaseItem
-VALUES(240, 118, 64);
+VALUES(240, 118, 30);
 INSERT INTO PurchaseItem
-VALUES(223, 120, 321);
+VALUES(223, 120, 21);
 INSERT INTO PurchaseItem
 VALUES(224, 121, 33);
