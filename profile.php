@@ -16,8 +16,8 @@ include('session.php');
 </head>
 <body>
 <div id="profile">
-    <b id="welcome">Welcome : <i><?php echo $login_session; ?></i></b>
-    <b id="logout"><a href="logout.php"?Log Out></a></b>
+    <p id="welcome">Welcome : <i><?php echo $_SESSION['login_user']; ?></i></p>
+    <p><a href="logout.php"><button type="button">LOG OUT</button></a></p>
 </div>
 </body>
 </html>

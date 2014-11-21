@@ -9,5 +9,5 @@ session_start();
 
 //Destroying all session
 if(session_destroy()) {
-    header("Location: index.php"); //Redirecting to Home Page
+    header("Location: login.php"); //Redirecting to Home Page
 }
