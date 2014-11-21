@@ -4,6 +4,7 @@
     $dbuser = "root";
     $dbpassword = "";
     $dbname = "CPSC304";
+    $currency = "$";
 
 
     global $connection;
