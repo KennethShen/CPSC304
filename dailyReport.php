@@ -19,6 +19,9 @@ function getDailySalesReport($year, $month, $day) {
         die('Error running the query.');
     }
 }
+    if(($_POST["year"] == NULL) ||($_POST["month"]== NULL) || ($_POST["day"] == NULL)){
+        header('location: /CPSC304/report.php');
+    }
     getDailySalesReport($_POST["year"], $_POST["month"], $_POST["day"]);
 ?>
 <html>

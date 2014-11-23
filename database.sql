@@ -105,15 +105,15 @@ VALUES(114, 'da', 'CD', 'classical','Gods Hand', 2014, 11.11, 50);
 INSERT INTO Item
 VALUES(115, 'ka', 'CD', 'pop','Gods Hand', 2014, 52.68, 50);
 INSERT INTO Item
-VALUES(116, 'lol', 'CD', 'classical','Gods Hand', 2014, 42.50, 50);
+VALUES(116, 'lol', 'CD', 'pop','Gods Hand', 2014, 42.50, 50);
 INSERT INTO Item
 VALUES(117, 'he', 'CD', 'classical','Gods Hand', 2014, 96.0, 50);
 INSERT INTO Item
-VALUES(118, 'ka', 'CD', 'classical','Gods Hand', 2014, 55.00, 50);
+VALUES(118, 'ka', 'CD', 'rap','Gods Hand', 2014, 55.00, 50);
 INSERT INTO Item
-VALUES(119, 'something', 'CD', 'classical','Gods Hand', 2014, 58.20, 50);
+VALUES(119, 'something', 'CD', 'pop','Gods Hand', 2014, 58.20, 50);
 INSERT INTO Item
-VALUES(120, 'nothing', 'CD', 'classical','Gods Hand', 2014, 15.45, 50);
+VALUES(120, 'nothing', 'CD', 'rap','Gods Hand', 2014, 15.45, 50);
 INSERT INTO Item
 VALUES(121, 'i dunno', 'CD', 'classical','Gods Hand', 2014, 85.58, 50);
 INSERT INTO Item
@@ -180,27 +180,27 @@ VALUES(240, CURRENT_DATE(),	339, 16516161, CURRENT_DATE()+10, CURRENT_DATE()+5, 
 INSERT INTO PurchaseItem
 VALUES(222, 111, 20);
 INSERT INTO PurchaseItem
-VALUES(229, 115, 40);
+VALUES(229, 111, 40);
 INSERT INTO PurchaseItem
-VALUES(230, 113, 2);
+VALUES(230, 112, 2);
 INSERT INTO PurchaseItem
-VALUES(231, 118, 50);
+VALUES(231, 113, 50);
 INSERT INTO PurchaseItem
-VALUES(232, 111, 32);
+VALUES(232, 114, 32);
 INSERT INTO PurchaseItem
-VALUES(233, 113, 20);
+VALUES(233, 115, 20);
 INSERT INTO PurchaseItem
 VALUES(234, 116, 12);
 INSERT INTO PurchaseItem
-VALUES(237, 113, 5);
+VALUES(237, 117, 5);
 INSERT INTO PurchaseItem
-VALUES(235, 123, 23);
+VALUES(235, 118, 23);
 INSERT INTO PurchaseItem
-VALUES(236, 112, 8);
+VALUES(236, 119, 8);
 INSERT INTO PurchaseItem
-VALUES(238, 117, 8);
+VALUES(238, 120, 8);
 INSERT INTO PurchaseItem
-VALUES(239, 113, 12);
+VALUES(239, 121, 12);
 INSERT INTO PurchaseItem
 VALUES(240, 118, 30);
 INSERT INTO PurchaseItem
