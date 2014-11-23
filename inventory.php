@@ -34,7 +34,7 @@
        
        // Create a delete query prepared statement with a ? for the item_upc
        //$stmt = $connection->prepare("DELETE FROM Item WHERE upc=?");
-       $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, type=type, category=category, company=company, year=year, price=price, stock=0 WHERE upc=?");
+       $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, type=type, category=category, company=company, year=year, price=price, stock = 0 WHERE upc = ?");
        $deleteUPC = $_POST['item_upc'];
        // Bind the title_id parameter, 's' indicates a string value
        $stmt->bind_param("s", $deleteUPC);
