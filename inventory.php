@@ -70,7 +70,7 @@
         
         if($stmt->error) {       
           printf("<b>Edited Quantity and/ or Unit Price</b>\n", $stmt->error); 
-        $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, company=company, price=?, stock =? WHERE upc=?");
+        $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, company=company, price=?, stock =? WHERE upc= ?");
 		$stmt->bind_param("dii", $price, $quantity, $item_upc);
 		$stmt->execute();
         } else {
