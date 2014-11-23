@@ -14,52 +14,47 @@ $error=''; //variable to store error message
 
 if(isset($_POST['submit'])) {
     if(empty($_POST['username']) || empty($_POST['password'])) {
-        $error = "Username or Password is invalid";
+        $error = "Please type!";
     }
 
-    if(!ctype_digit($_POST['username'])) {
-        $error = "Invalid username. Input numbers";
-    }
     else {
         //Define username and password
-        $username = $_POST['username'];
-        $password = $_POST['password'];
+        $form_username = $_POST['username'];
+        $form_password = $_POST['password'];
 
-        try {
-            //Establish connection with server by passing server_name, user_id, pw as param
-            //$connection = mysql_connect("localhost", "root", "");
+        $retrieved_password = null;
+       //$check_query = "SELECT username, password FROM Customer WHERE username=? AND password=?";
+        if ($log_check = $connection->prepare("SELECT password FROM Customer WHERE username=?")) {
+            $log_check->bind_param("s", $form_username);
+            $log_check->execute();
+            $log_check->bind_result($retrieved_password);
+            $log_check->store_result();
+            $log_check->fetch();
+            $num = $log_check->num_rows;
+            echo $num;
 
-            //Protect MySql injection for security
-            $username = stripslashes($username);
-            $password = stripslashes($password);
-            $username = mysql_real_escape_string($username);
-            $password = mysql_real_escape_string($password);
+                // check password retrieved against user supplied password
+                // use function password_verify( $password, $hash ) to check user inputted password vs hash
+                if(password_verify($form_password, $retrieved_password)){
+                    echo "yay";
+                    $_SESSION['login_user'] = $form_username; //Initializing session
+                    header('Location: profile.php'); //Redirecting to other page
+                    $log_check->free_result();
 
-            $sql = "INSERT INTO Customer(cid, password, name, address, phone) VALUES(" . $username . ", " . $password . ", null, null, null)";
-            $connection->exec($sql);
-            echo "New registration created successfully";
+                }
+                else {
+                    $error = "Username or Password is invalid";
+                }
+            $log_check->close(); //Closing connection
+
         }
 
-        catch(PDOException $e) {
-            echo $sql . "<br>" . $e->getMessage();
-        }
 
-        //Select database
-        $db = mysql_select_db("CPSC304", $connection);
-
-        //SQL query to fetch info of registered users and find user match
-        $query = mysql_query("select * from login where username='$username' AND password='$password'", $connection);
-        $rows = mysql_num_rows($query);
-        if($rows == 1) {
-            $_SESSION['login_user']=$username; //Initializing session
-            header("location : profile.php"); //Redirecting to other page
-        }
-        else {
-            $error = "Username or Password is invalid";
-        }
-        mysql_close($connection); //Closing connection
     }
+
+
 }
+
 
 
 
@@ -85,7 +80,7 @@ if(isset($_POST['submit'])) {
                 <label>Password</label><br>
                 <input id="password" name="password" placeholder="**********" type="password">
                 <input name="submit" type="submit" value="Login ">
-                <a href="/CPSC304/includes/registration.php"><button type="button">Register</button></a>
+                <a href="/CPSC304/registration.php"><button type="button">Register</button></a>
                 <span><?php echo $error; ?></span>
                     </form>
                 </div>

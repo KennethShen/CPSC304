@@ -14,7 +14,7 @@ function register_form() {
         ."Confirm your password: <input type='password' name='password_conf' size='30'><br>"
         ."Name: <input type='text' name='name' size='30'><br>"
         ."Address: <input type='text' name='address' size='60'><br>"
-        ."Phone Number: <input type='text' name='phone number' size='10'><br>"
+        ."Phone Number: <input type='text' name='phone_number' size='10'><br>"
         ."<input type='hidden' name='date' value='$date'>"
         ."<input type='submit' value='Register'>"
         ."</form>";
@@ -23,18 +23,7 @@ function register_form() {
 //Register user's data
 function register() {
     //Connect to database
-    $connection;
-
-    if(!$connection) {
-        die(mysql_error());
-    }
-
-    //Select database
-    $select_db = mysql_select_db("CPSC304", $connection);
-
-    if(!$select_db){
-        die(mysql_error());
-    }
+    global $connection;
 
     //Collecting info
     $username=$_POST['username'];
@@ -42,7 +31,7 @@ function register() {
     $pass_conf=$_POST['password_conf'];
     $name=$_POST['name'];
     $address=$_POST['address'];
-    $phone=$_POST['phone number'];
+    $phone_number=$_POST['phone_number'];
     $date=$_POST['date'];
 
     //Check for empty fields
@@ -70,11 +59,17 @@ function register() {
         die("Can I get your number?<br>");
     }
 
-    //Check username is already in use
-    $user_check=mysql_query("SELECT username FROM Customer WHERE username='$username'");
-    $do_user_check = mysql_num_rows($user_check);
+    $user_result = null;
+    $password_result = null;
+    if ($user_stmt = $connection->prepare("SELECT username, password FROM Customer WHERE username=?")){
+        $user_stmt->bind_param("s", $username);
+        $user_stmt->execute();
+        $user_stmt->bind_result($user_result, $password_result);
+        $user_stmt->fetch();
+        $user_stmt->close();
+    }
 
-    if($do_user_check > 0){
+    if($user_result != null) {
         die("Username is already in use");
     }
 
@@ -84,13 +79,20 @@ function register() {
     }
 
     //Now register if everything is okie
-    $insert = mysql_query("INSERT INTO Customer(username, password, name, address, phone) VALUES ('$username', '$password','$name', '$address', '$phone')");
-
-    if(!$insert){
-        die("There is something wrong with registration");
+    $password = password_hash($password, PASSWORD_BCRYPT);
+    $insert_stmt = $connection->prepare("INSERT INTO Customer(username, password, name, address, phone) VALUES (?,?,?,?,?)");
+    if($insert_stmt) {
+        $insert_stmt->bind_param("sssss", $username, $password, $name, $address, $phone_number);
+        $insert_stmt->execute();
+        $insert_stmt->close();
     }
+    echo mysqli_insert_id($connection);
+    if (mysqli_insert_id($connection) > -1) {
+        echo $username.", you are now registered. Thank you!<br><a href=logout.php>Logout</a> | <a href=index.php>Index</a>";
+    } else echo "An error has occured. Please call help\n";
 
-    echo $username.", you are now registered. Thank you!<br><a href=login.php>Login</a> | <a href=index.php>Index</a>";
+    $connection->close();
+
 }
 $act="form";
 

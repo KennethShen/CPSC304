@@ -32,6 +32,7 @@ hr {
     padding:10px 40px 25px;
     margin-top:70px
 }
+
 input[type=text],input[type=password] {
     width:99.5%;
     padding:10px;
@@ -72,11 +73,7 @@ button {
     font-size:20px;
     background-color:#DCE6F7
 }
-#logout {
-    float:right;
-    padding:5px;
-    border:dashed 1px gray
-}
+
 a {
     text-decoration:none;
     color:#6495ed

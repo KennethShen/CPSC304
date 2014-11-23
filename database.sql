@@ -38,9 +38,9 @@ CREATE TABLE IF NOT EXISTS HasSong (
         
 -- Customer(cid, username, password, name, address, phone)
 CREATE TABLE IF NOT EXISTS Customer (
-cid INTEGER,
+cid INTEGER NOT NULL AUTO_INCREMENT,
 	username VARCHAR(24) UNIQUE,
-  	password VARCHAR(24),
+  	password VARCHAR(60),
 	name CHAR(30),
 	address VARCHAR(30),
 	phone INTEGER(10),
