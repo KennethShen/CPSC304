@@ -13,12 +13,16 @@ function getDailySalesReport($year, $month, $day) {
     $date = date_create($dateString);
     $queryString = "SELECT i.upc, i.category, i.price, sum(quantity), sum(quantity)*i.price AS total " .
         "FROM Purchase p, Item i, PurchaseItem pi " .
-        "WHERE p.date = '$dateString' AND pi.upc = i.upc AND pi.receiptId = p.receiptId
+        "WHERE p.date = '?' AND pi.upc = i.upc AND pi.receiptId = p.receiptId
          GROUP BY i.upc, i.category ORDER BY i.category, total DESC";
-    if(!$result = $connection->query($queryString)){
+    
+    if(!$result = $connection->prepare($queryString)){
         die('Error running the query.');
     }
 }
+    if(($_POST["year"] == NULL) ||($_POST["month"]== NULL) || ($_POST["day"] == NULL)){
+        header('location: /CPSC304/report.php');
+    }
     getDailySalesReport($_POST["year"], $_POST["month"], $_POST["day"]);
 ?>
 <html>
@@ -37,7 +41,7 @@ function getDailySalesReport($year, $month, $day) {
         $totalCatSale = 0;
         $totalUnit = 0;
         $totalSale = 0;
-        while($row = $result->fetch_assoc() AND $i<10 ){
+        while($row = $result->fetch_assoc()){
             if($i == 0){
                 $lastCat = $row['category'];
             }
