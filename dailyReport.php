@@ -39,7 +39,7 @@ getDailySalesReport($_POST["year"], $_POST["month"], $_POST["day"]);
     $totalCatSale = 0;
     $totalUnit = 0;
     $totalSale = 0;
-    while($row = $result->fetch_assoc() AND $i<10 ){
+    while($row = $result->fetch_assoc()){
         if($i == 0){
             $lastCat = $row['category'];
         }
