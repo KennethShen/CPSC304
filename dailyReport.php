@@ -1,7 +1,6 @@
 <?php
 require_once("includes/connection.php");
 include_once("includes/header.php");
-
 if(mysqli_connect_errno()){
     printf("Connection fail: %s\n", mysqli_connect_errno());
     exit();
@@ -13,17 +12,16 @@ function getDailySalesReport($year, $month, $day) {
     $date = date_create($dateString);
     $queryString = "SELECT i.upc, i.category, i.price, sum(quantity), sum(quantity)*i.price AS total " .
         "FROM Purchase p, Item i, PurchaseItem pi " .
-        "WHERE p.date = '?' AND pi.upc = i.upc AND pi.receiptId = p.receiptId
+        "WHERE p.date = '$dateString' AND pi.upc = i.upc AND pi.receiptId = p.receiptId
          GROUP BY i.upc, i.category ORDER BY i.category, total DESC";
-    
-    if(!$result = $connection->prepare($queryString)){
+    if(!$result = $connection->query($queryString)){
         die('Error running the query.');
     }
 }
-    if(($_POST["year"] == NULL) ||($_POST["month"]== NULL) || ($_POST["day"] == NULL)){
-        header('location: /CPSC304/report.php');
-    }
-    getDailySalesReport($_POST["year"], $_POST["month"], $_POST["day"]);
+if(($_POST["year"] == NULL) ||($_POST["month"]== NULL) || ($_POST["day"] == NULL)){
+    header('location: /CPSC304/report.php');
+}
+getDailySalesReport($_POST["year"], $_POST["month"], $_POST["day"]);
 ?>
 <html>
 <body>
@@ -36,48 +34,47 @@ function getDailySalesReport($year, $month, $day) {
         <th class=rowheader>Total Value</th>
     </tr>
     <?php
-        $i = 0;
-        $totalCatUnit = 0;
-        $totalCatSale = 0;
-        $totalUnit = 0;
-        $totalSale = 0;
-        while($row = $result->fetch_assoc()){
-            if($i == 0){
-                $lastCat = $row['category'];
-            }
-            if($lastCat != $row['category']) {
-                echo "<tr>";
-                echo "<td>"."</td>";
-                echo "<td>"."Total"."</td>";
-                echo "<td>"."</td>";
-                echo "<td>".$totalCatUnit."</td>";
-                echo "<td>".$totalCatSale."</td>";
-                $totalCatSale = 0;
-                $totalCatUnit = 0;
-            }
-            echo "<tr>";
-            echo "<td>".$row['upc']."</td>";
-            echo "<td>".$row['category']."</td>";
-            echo "<td>".$row['price']."</td>";
-            echo "<td>".$row['sum(quantity)']."</td>";
-            echo "<td>".$row['total']."</td>";
-            echo "</tr>";
-            $totalCatUnit += (double) $row['sum(quantity)'];
-            $totalCatSale += (double) $row['total'];
-
+    $i = 0;
+    $totalCatUnit = 0;
+    $totalCatSale = 0;
+    $totalUnit = 0;
+    $totalSale = 0;
+    while($row = $result->fetch_assoc() AND $i<10 ){
+        if($i == 0){
             $lastCat = $row['category'];
-            $i += 1;
-            $totalUnit += (double) $row['sum(quantity)'];
-            $totalSale += (double) $row['total'];
+        }
+        if($lastCat != $row['category']) {
+            echo "<tr>";
+            echo "<td>"."</td>";
+            echo "<td>"."Total"."</td>";
+            echo "<td>"."</td>";
+            echo "<td>".$totalCatUnit."</td>";
+            echo "<td>".$totalCatSale."</td>";
+            $totalCatSale = 0;
+            $totalCatUnit = 0;
         }
         echo "<tr>";
-        echo "<td>"."</td>";
-        echo "<td>"."Total"."</td>";
-        echo "<td>"."</td>";
-        echo "<td>".$totalCatUnit."</td>";
-        echo "<td>".$totalCatSale."</td>";
-        $totalCatSale = 0;
-        $totalCatUnit = 0;
+        echo "<td>".$row['upc']."</td>";
+        echo "<td>".$row['category']."</td>";
+        echo "<td>".$row['price']."</td>";
+        echo "<td>".$row['sum(quantity)']."</td>";
+        echo "<td>".$row['total']."</td>";
+        echo "</tr>";
+        $totalCatUnit += (double) $row['sum(quantity)'];
+        $totalCatSale += (double) $row['total'];
+        $lastCat = $row['category'];
+        $i += 1;
+        $totalUnit += (double) $row['sum(quantity)'];
+        $totalSale += (double) $row['total'];
+    }
+    echo "<tr>";
+    echo "<td>"."</td>";
+    echo "<td>"."Total"."</td>";
+    echo "<td>"."</td>";
+    echo "<td>".$totalCatUnit."</td>";
+    echo "<td>".$totalCatSale."</td>";
+    $totalCatSale = 0;
+    $totalCatUnit = 0;
     echo "<tr>";
     echo "<td>"."</td>";
     echo "<td>"."</td>";
@@ -92,7 +89,6 @@ function getDailySalesReport($year, $month, $day) {
     echo "<td>".$totalUnit."</td>";
     echo "<td>".$totalSale."</td>";
     echo "</tr>";
-
     echo "</table>";
     mysqli_close($connection);
     ?>
