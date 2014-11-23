@@ -14,7 +14,7 @@ function getDailySalesReport($year, $month, $day) {
     $queryString = "SELECT i.upc, i.category, i.price, sum(quantity), sum(quantity)*i.price AS total " .
         "FROM Purchase p, Item i, PurchaseItem pi " .
         "WHERE p.date = '$dateString' AND pi.upc = i.upc AND pi.receiptId = p.receiptId
-         GROUP BY i.upc ORDER BY total DESC";
+         GROUP BY i.upc, i.category ORDER BY i.category, total DESC";
     if(!$result = $connection->query($queryString)){
         die('Error running the query.');
     }
@@ -33,9 +33,24 @@ function getDailySalesReport($year, $month, $day) {
     </tr>
     <?php
         $i = 0;
+        $totalCatUnit = 0;
+        $totalCatSale = 0;
         $totalUnit = 0;
         $totalSale = 0;
         while($row = $result->fetch_assoc() AND $i<10 ){
+            if($i == 0){
+                $lastCat = $row['category'];
+            }
+            if($lastCat != $row['category']) {
+                echo "<tr>";
+                echo "<td>"."</td>";
+                echo "<td>"."Total"."</td>";
+                echo "<td>"."</td>";
+                echo "<td>".$totalCatUnit."</td>";
+                echo "<td>".$totalCatSale."</td>";
+                $totalCatSale = 0;
+                $totalCatUnit = 0;
+            }
             echo "<tr>";
             echo "<td>".$row['upc']."</td>";
             echo "<td>".$row['category']."</td>";
@@ -43,10 +58,22 @@ function getDailySalesReport($year, $month, $day) {
             echo "<td>".$row['sum(quantity)']."</td>";
             echo "<td>".$row['total']."</td>";
             echo "</tr>";
+            $totalCatUnit += (double) $row['sum(quantity)'];
+            $totalCatSale += (double) $row['total'];
+
+            $lastCat = $row['category'];
             $i += 1;
-            $totalUnit += (int) $row['sum(quantity)'];
-            $totalSale += (int) $row['total'];
+            $totalUnit += (double) $row['sum(quantity)'];
+            $totalSale += (double) $row['total'];
         }
+        echo "<tr>";
+        echo "<td>"."</td>";
+        echo "<td>"."Total"."</td>";
+        echo "<td>"."</td>";
+        echo "<td>".$totalCatUnit."</td>";
+        echo "<td>".$totalCatSale."</td>";
+        $totalCatSale = 0;
+        $totalCatUnit = 0;
     echo "<tr>";
     echo "<td>"."</td>";
     echo "<td>"."</td>";

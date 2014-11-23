@@ -95,15 +95,15 @@ CREATE TABLE IF NOT EXISTS ReturnItem (
 
 -- Dummpy entities--
 INSERT INTO Item
-VALUES(111, 'bleh', 'CD', 'classical','Gods Hand', 2014, 99.99, 50);
+VALUES(111, 'bleh', 'CD', 'rock','Gods Hand', 2014, 99.99, 50);
 INSERT INTO Item
-VALUES(112, 'ha', 'CD', 'classical','Gods Hand', 2014, 20.0, 50);
+VALUES(112, 'ha', 'CD', 'rap','Gods Hand', 2014, 20.0, 50);
 INSERT INTO Item
 VALUES(113, 'das', 'CD', 'classical','Gods Hand', 2014, 52.60, 50);
 INSERT INTO Item
 VALUES(114, 'da', 'CD', 'classical','Gods Hand', 2014, 11.11, 50);
 INSERT INTO Item
-VALUES(115, 'ka', 'CD', 'classical','Gods Hand', 2014, 52.68, 50);
+VALUES(115, 'ka', 'CD', 'pop','Gods Hand', 2014, 52.68, 50);
 INSERT INTO Item
 VALUES(116, 'lol', 'CD', 'classical','Gods Hand', 2014, 42.50, 50);
 INSERT INTO Item
