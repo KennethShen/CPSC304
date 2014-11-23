@@ -152,7 +152,7 @@
     <table border=0 cellpadding=0 cellspacing=0>
         <tr><td>UPC</td><td><input type="text" size=30 name="new_item_upc"</td></tr>
         <tr><td>Item Title</td><td><input type="text" size=30 name="new_title"</td></tr>
-        <tr><td>Company Name:</td><td> <input type="text" size=5 name="new_company"></td></tr>
+        <tr><td>Company Name:</td><td> <input type="text" size=30 name="new_company"></td></tr>
         <tr><td>Quantity:</td><td> <input type="text" size=5 name="new_quantity"></td></tr>
         <tr><td>Unit Price:</td><td> <input type="text" size=5 name="new_unit_price"></td></tr>
         <tr><td></td><td><input type="submit" name="submit" border=0 value="ADD"></td></tr>
