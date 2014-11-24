@@ -207,3 +207,10 @@ INSERT INTO PurchaseItem
 VALUES(223, 120, 21);
 INSERT INTO PurchaseItem
 VALUES(224, 121, 33);
+
+CREATE VIEW topsell AS SELECT i.upc, i.category, i.price, p.date, sum(quantity) AS total
+FROM Purchase p, Item i, PurchaseItem pi 
+WHERE pi.upc = i.upc AND pi.receiptId = p.receiptId
+GROUP BY i.upc ORDER BY sum(quantity) DESC;
+
+
