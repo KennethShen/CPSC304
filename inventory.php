@@ -33,7 +33,8 @@
         */
        
        // Create a delete query prepared statement with a ? for the item_upc
-       $stmt = $connection->prepare("DELETE FROM Item WHERE upc=?");
+       //$stmt = $connection->prepare("DELETE FROM Item WHERE upc=?");
+       $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, type=type, category=category, company=company, year=year, price=price, stock = 0 WHERE upc = ?");
        $deleteUPC = $_POST['item_upc'];
        // Bind the title_id parameter, 's' indicates a string value
        $stmt->bind_param("s", $deleteUPC);
@@ -44,7 +45,7 @@
        if($stmt->error) {
          printf("<b>Error: %s.</b>\n", $stmt->error);
        } else {
-         echo "<b>Successfully deleted ".$deleteUPC."</b>";
+         echo "<b>Successfully deleted: Now 0 quantity for Item UPC ".$deleteUPC."</b>";
        }
             
       } elseif (isset($_POST["submit"]) && $_POST["submit"] ==  "ADD") {       
@@ -59,7 +60,8 @@
        
     
         $stmt = $connection->prepare("INSERT INTO Item (upc, title, company, stock, price) VALUES (?,?,?,?,?)");
-        //$stmt = $connection->prepare("UPDATE Item SET (stock=$quantity, price=$price) WHERE (upc=$item_upc, title=$title, company=$company)");
+        //$stmt = $connection->prepare("UPDATE Item SET stock=?, price=? WHERE upc=?, title=?, company=?"); 
+		//$stmt->bind_param("ifiss", $quantity, $price, $item_upc, $title, $company);
         
         // Bind the title and pub_id parameters, 'sss' indicates 3 strings
         $stmt->bind_param("issid", $item_upc, $title, $company, $quantity, $price);
@@ -67,9 +69,12 @@
         $stmt->execute();
         
         if($stmt->error) {       
-          printf("<b>Error: %s.</b>\n", $stmt->error);
+          printf("<b>Edited Quantity and/ or Unit Price</b>\n", $stmt->error); 
+        $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, company=company, price=?, stock =? WHERE upc= ?");
+		$stmt->bind_param("dii", $price, $quantity, $item_upc);
+		$stmt->execute();
         } else {
-          echo "<b>Successfully added ".$title."</b>";
+          echo "<b>Successfully added: Item ".$title."</b>";
         }
       }
    }
@@ -150,7 +155,7 @@
     <table border=0 cellpadding=0 cellspacing=0>
         <tr><td>UPC</td><td><input type="text" size=30 name="new_item_upc"</td></tr>
         <tr><td>Item Title</td><td><input type="text" size=30 name="new_title"</td></tr>
-        <tr><td>Company Name:</td><td> <input type="text" size=5 name="new_company"></td></tr>
+        <tr><td>Company Name:</td><td> <input type="text" size=30 name="new_company"></td></tr>
         <tr><td>Quantity:</td><td> <input type="text" size=5 name="new_quantity"></td></tr>
         <tr><td>Unit Price:</td><td> <input type="text" size=5 name="new_unit_price"></td></tr>
         <tr><td></td><td><input type="submit" name="submit" border=0 value="ADD"></td></tr>
