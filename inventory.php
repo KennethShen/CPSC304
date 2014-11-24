@@ -69,9 +69,12 @@
         $stmt->execute();
         
         if($stmt->error) {       
-          printf("<b>Error: %s.</b>\n", $stmt->error); 
+          printf("<b>Edited Quantity and/ or Unit Price</b>\n", $stmt->error); 
+        $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, company=company, price=?, stock =? WHERE upc= ?");
+		$stmt->bind_param("dii", $price, $quantity, $item_upc);
+		$stmt->execute();
         } else {
-          echo "<b>Successfully added: ".$title."</b>";
+          echo "<b>Successfully added: Item ".$title."</b>";
         }
       }
    }
