@@ -86,7 +86,7 @@ function register() {
         $insert_stmt->execute();
         $insert_stmt->close();
     }
-    echo mysqli_insert_id($connection);
+    //echo mysqli_insert_id($connection);
     if (mysqli_insert_id($connection) > -1) {
         echo $username.", you are now registered. Thank you!<br><a href=logout.php>Logout</a> | <a href=index.php>Index</a>";
     } else echo "An error has occured. Please call help\n";
