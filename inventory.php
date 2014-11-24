@@ -54,23 +54,24 @@
         */
         $item_upc = $_POST["new_item_upc"];
         $title = $_POST["new_title"];
+        $type = $_POST["new_type"];
+        $category = $_POST["new_category"];
         $company = $_POST["new_company"];
-        $quantity = $_POST["new_quantity"];
+        $year = $_POST["new_year"];
 		$price = $_POST["new_unit_price"];
+        $quantity = $_POST["new_quantity"];
        
     
-        $stmt = $connection->prepare("INSERT INTO Item (upc, title, company, stock, price) VALUES (?,?,?,?,?)");
-        //$stmt = $connection->prepare("UPDATE Item SET stock=?, price=? WHERE upc=?, title=?, company=?"); 
-		//$stmt->bind_param("ifiss", $quantity, $price, $item_upc, $title, $company);
+        $stmt = $connection->prepare("INSERT INTO Item (upc, title, type, category, company, year, price, stock) VALUES (?,?,?,?,?,?,?,?)");
         
         // Bind the title and pub_id parameters, 'sss' indicates 3 strings
-        $stmt->bind_param("issid", $item_upc, $title, $company, $quantity, $price);
+        $stmt->bind_param("issssidi", $item_upc, $title, $type, $category, $company, $year, $price, $quantity);
         // Execute the insert statement
         $stmt->execute();
         
         if($stmt->error) {       
           printf("<b>Edited Quantity and/ or Unit Price</b>\n", $stmt->error); 
-        $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, company=company, price=?, stock =? WHERE upc= ?");
+        $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, type=type, category=category, company=company, year=year, price=?, stock =? WHERE upc= ?");
 		$stmt->bind_param("dii", $price, $quantity, $item_upc);
 		$stmt->execute();
         } else {
@@ -88,9 +89,12 @@
 <tr valign=center>
 <td class=rowheader>UPC</td>
 <td class=rowheader>Title</td>
+<td class=rowheader>Type</td>
+<td class=rowheader>Category</td>
 <td class=rowheader>Company</td>
-<td class=rowheader>Quantity</td>
+<td class=rowheader>Year</td>
 <td class=rowheader>Unit Price</td>
+<td class=rowheader>Quantity</td>
 </tr>
 
 <?php
@@ -99,7 +103,7 @@
      ****************************************************/
 
    // Select all of the item rows columns upc, title and quantity...
-    if (!$result = $connection->query("SELECT upc, title, company, stock, price FROM Item ORDER BY title")) {
+    if (!$result = $connection->query("SELECT upc, title, type, category, company, year, price, stock FROM Item ORDER BY title")) {
         die('There was an error running the query [' . $connection->error . ']');
     }
 
@@ -120,9 +124,12 @@
        echo "<tr>";
        echo "<td>".$row['upc']."</td>";
        echo "<td>".$row['title']."</td>";
+       echo "<td>".$row['type']."</td>";
+       echo "<td>".$row['category']."</td>";
        echo "<td>".$row['company']."</td>";
-       echo "<td>".$row['stock']."</td>";
-	   echo "<td>".$row['price']."</td><td>";
+       echo "<td>".$row['year']."</td>";
+       echo "<td>".$row['price']."</td>";
+	   echo "<td>".$row['stock']."</td><td>";
        
        //Display an option to delete this title using the Javascript function and the hidden item_upc
        echo "<a href=\"javascript:formSubmit('".$row['upc']."');\">DELETE</a>";
@@ -153,11 +160,14 @@
 
 <form id="add" name="add" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
     <table border=0 cellpadding=0 cellspacing=0>
-        <tr><td>UPC</td><td><input type="text" size=30 name="new_item_upc"</td></tr>
-        <tr><td>Item Title</td><td><input type="text" size=30 name="new_title"</td></tr>
+        <tr><td>UPC:</td><td><input type="text" size=30 name="new_item_upc"</td></tr>
+        <tr><td>Item Title:</td><td><input type="text" size=30 name="new_title"</td></tr>
+        <tr><td>Item Type CD/ DVD:</td><td> <input type="text" size=30 name="new_type"></td></tr>
+        <tr><td>Item Category:</td><td> <input type="text" size=30 name="new_category"></td></tr>
         <tr><td>Company Name:</td><td> <input type="text" size=30 name="new_company"></td></tr>
-        <tr><td>Quantity:</td><td> <input type="text" size=5 name="new_quantity"></td></tr>
+        <tr><td>Year:</td><td> <input type="text" size=30 name="new_year"></td></tr>
         <tr><td>Unit Price:</td><td> <input type="text" size=5 name="new_unit_price"></td></tr>
+        <tr><td>Quantity:</td><td> <input type="text" size=5 name="new_quantity"></td></tr>
         <tr><td></td><td><input type="submit" name="submit" border=0 value="ADD"></td></tr>
     </table>
 </form>
