@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS PurchaseItem (
 
 -- Returned (retid, date, receptId)
 CREATE TABLE IF NOT EXISTS Returned(
-	retid INTEGER NOT NULL,
+	retid INTEGER NOT NULL AUTO_INCREMENT,
 	date DATE,
 	receiptId INTEGER,
 	PRIMARY KEY(retid),
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS Returned(
 CREATE TABLE IF NOT EXISTS ReturnItem (
 	retid INTEGER NOT NULL,
 	upc INTEGER NOT NULL,
-	quantitiy INTEGER,
+	quantity INTEGER,
 	PRIMARY KEY(retid, upc),
 	FOREIGN KEY (retid) REFERENCES Returned(retid),
 	FOREIGN KEY (upc) REFERENCES Item(upc)
@@ -183,6 +183,8 @@ INSERT INTO PurchaseItem
 VALUES(229, 111, 40);
 INSERT INTO PurchaseItem
 VALUES(230, 112, 2);
+INSERT INTO PurchaseItem
+VALUES(227, 113, 50);
 INSERT INTO PurchaseItem
 VALUES(231, 113, 50);
 INSERT INTO PurchaseItem
