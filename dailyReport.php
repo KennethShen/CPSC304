@@ -9,7 +9,6 @@ function getDailySalesReport($year, $month, $day) {
     global $connection;
     global $result;
     $dateString = $year."-".$month."-".$day;
-    $date = date_create($dateString);
     $queryString = "SELECT i.upc, i.category, i.price, sum(quantity), sum(quantity)*i.price AS total " .
         "FROM Purchase p, Item i, PurchaseItem pi " .
         "WHERE p.date = '$dateString' AND pi.upc = i.upc AND pi.receiptId = p.receiptId
