@@ -5,7 +5,7 @@ USE CPSC304;
 -- Item(upc, title, type, category, company, year, price, stock)
 
 CREATE TABLE IF NOT EXISTS Item(
-	upc INTEGER,
+	upc INTEGER NOT NULL,
 	title CHAR(30),
     type VARCHAR(3),
 	category VARCHAR(30),
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS Item(
 -- LeadSinger(upc, name)
 
 CREATE TABLE IF NOT EXISTS LeadSinger (
-    upc INTEGER,
+    upc INTEGER NOT NULL,
     name VARCHAR(30),
     PRIMARY KEY (upc, name),
     FOREIGN KEY (upc) REFERENCES Item(upc)
@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS LeadSinger (
 -- HasSong(upc, title)
 
 CREATE TABLE IF NOT EXISTS HasSong (
-    upc INTEGER,
+    upc INTEGER NOT NULL,
     title VARCHAR(24),
     PRIMARY KEY (upc, title),
     FOREIGN KEY (upc) REFERENCES Item(upc)
@@ -50,7 +50,7 @@ cid INTEGER NOT NULL AUTO_INCREMENT,
  -- Purchase (receiptId, date, cid, card#, expiryDate,expectedDate, deliveredDate)
 
 CREATE TABLE IF NOT EXISTS Purchase (
-	receiptId INTEGER,
+	receiptId INTEGER NOT NULL,
 	date DATE,
 	cid INTEGER,
 	cardNo INTEGER,
@@ -65,8 +65,8 @@ CREATE TABLE IF NOT EXISTS Purchase (
 -- PurchaseItem (receiptId, upc, quantity)
 
 CREATE TABLE IF NOT EXISTS PurchaseItem (
-	receiptId INTEGER,
-	upc INTEGER,
+	receiptId INTEGER NOT NULL,
+	upc INTEGER NOT NULL,
 	quantity INTEGER,
 	PRIMARY KEY(receiptId, upc),
 	FOREIGN KEY(receiptId) REFERENCES Purchase(receiptId),
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS PurchaseItem (
 
 -- Returned (retid, date, receptId)
 CREATE TABLE IF NOT EXISTS Returned(
-	retid INTEGER,
+	retid INTEGER NOT NULL,
 	date DATE,
 	receiptId INTEGER,
 	PRIMARY KEY(retid),
@@ -85,8 +85,8 @@ CREATE TABLE IF NOT EXISTS Returned(
 
 -- ReturnItem( retid, upc, quantity)
 CREATE TABLE IF NOT EXISTS ReturnItem (
-	retid INTEGER,
-	upc INTEGER,
+	retid INTEGER NOT NULL,
+	upc INTEGER NOT NULL,
 	quantitiy INTEGER,
 	PRIMARY KEY(retid, upc),
 	FOREIGN KEY (retid) REFERENCES Returned(retid),
