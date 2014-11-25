@@ -52,7 +52,7 @@ WHERE date=?
 ORDER BY total DESC
 LIMIT ?";
 
-        $topstmt = $connection->prepare($topView);
+        $toopstmt = $connection->prepare($topView);
         $topstmt->bind_param("si", $date_top, $howmany);
         $topstmt->execute();
         $result = $topstmt->get_result();
