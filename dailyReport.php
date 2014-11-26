@@ -1,3 +1,11 @@
+<html>
+<body>
+<form action = "" method = "post">
+    Year : <input type = "text" name = "year">
+    Month: <input type = "text" name = "month">
+    Day  : <input type = "text" name = "day">
+    <input type = "submit">
+</form>
 <?php
 require_once("includes/connection.php");
 include_once("includes/header.php");
@@ -6,11 +14,7 @@ if(mysqli_connect_errno()){
     exit();
 }
 
-if(($_POST["year"] == NULL) ||($_POST["month"]== NULL) || ($_POST["day"] == NULL)){
-    header('location: /CPSC304/report.php');
-}
 ?>
-<html>
 <body>
 <table>
     <tr valign = center>
@@ -21,6 +25,10 @@ if(($_POST["year"] == NULL) ||($_POST["month"]== NULL) || ($_POST["day"] == NULL
         <th class=rowheader>Total Value</th>
     </tr>
     <?php
+
+    if((!isset($_POST["year"])) ||(!isset($_POST["month"])) || (!isset($_POST["day"]))){
+        Echo "Please specify a date.";
+    } else {
     $year = $_POST["year"];
     $month = $_POST["month"];
     $day = $_POST["day"];
@@ -93,6 +101,7 @@ if(($_POST["year"] == NULL) ||($_POST["month"]== NULL) || ($_POST["day"] == NULL
     echo "</tr>";
     echo "</table>";
     mysqli_close($connection);
+    }
     ?>
 </table>
 </body>
