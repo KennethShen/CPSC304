@@ -69,24 +69,22 @@
         
         // If the provided upc already exits, Update
         // Otherwise execute the insert statement
-        if ($item_upc == 0) {
-    		die("There was no item to be added. To add a new item, please go back and specify the fields. ");
-    	} else {
-    		if($item_upc == $item_upc) {
+        	
+    	if($item_upc == $item_upc) {
     			$stmt = $connection->prepare("UPDATE Item SET price=?, stock =? WHERE upc= ?");
 				$stmt->bind_param("dii", $price, $quantity, $item_upc);
 				$stmt->execute();
 			} else {
     			$stmt->execute();
     		}
-    	}
-    	
     	if($stmt->error) {
          printf("<b>Error: %s.</b>\n", $stmt->error);
-       } else {
+       } elseif ($item_upc == NULL) {
+           	echo "<b>There was no item to be added. To add a new item, please specify all the fields. </b>";
+		} else {
          echo "<b>Successfully added: UPC ".$item_upc."</b>";
        }
-      }
+    }    
    }
 ?>
 
