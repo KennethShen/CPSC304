@@ -5,22 +5,10 @@ if(mysqli_connect_errno()){
     printf("Connection fail: %s\n", mysqli_connect_errno());
     exit();
 }
-function getDailySalesReport($year, $month, $day) {
-    global $connection;
-    global $result;
-    $dateString = $year."-".$month."-".$day;
-    $queryString = "SELECT i.upc, i.category, i.price, sum(quantity), sum(quantity)*i.price AS total " .
-        "FROM Purchase p, Item i, PurchaseItem pi " .
-        "WHERE p.date = '$dateString' AND pi.upc = i.upc AND pi.receiptId = p.receiptId
-         GROUP BY i.upc, i.category ORDER BY i.category, total DESC";
-    if(!$result = $connection->query($queryString)){
-        die('Error running the query.');
-    }
-}
+
 if(($_POST["year"] == NULL) ||($_POST["month"]== NULL) || ($_POST["day"] == NULL)){
     header('location: /CPSC304/report.php');
 }
-getDailySalesReport($_POST["year"], $_POST["month"], $_POST["day"]);
 ?>
 <html>
 <body>
@@ -33,6 +21,21 @@ getDailySalesReport($_POST["year"], $_POST["month"], $_POST["day"]);
         <th class=rowheader>Total Value</th>
     </tr>
     <?php
+    $year = $_POST["year"];
+    $month = $_POST["month"];
+    $day = $_POST["day"];
+    $dateString = $year."-".$month."-".$day;
+    $queryString = "SELECT i.upc, i.category, i.price, sum(quantity), sum(quantity)*i.price AS total " .
+        "FROM Purchase p, Item i, PurchaseItem pi " .
+        "WHERE p.date = ? AND pi.upc = i.upc AND pi.receiptId = p.receiptId
+         GROUP BY i.upc, i.category ORDER BY i.category, total DESC";
+    $stmt = $connection->prepare($queryString);
+    $stmt->bind_param("s", $dateString);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if($result == NULL){
+        die('Error running the query.');
+    }
     $i = 0;
     $totalCatUnit = 0;
     $totalCatSale = 0;
