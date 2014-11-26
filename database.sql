@@ -6,13 +6,13 @@ USE CPSC304;
 
 CREATE TABLE IF NOT EXISTS Item(
 	upc INTEGER NOT NULL,
-	title CHAR(30),
-    type VARCHAR(3),
-	category VARCHAR(30),
-	company VARCHAR(30),
-	year INTEGER,
-    price DOUBLE,
-	stock INTEGER,
+	title CHAR(30) NOT NULL,
+    type VARCHAR(3) NOT NULL,
+	category VARCHAR(30) NOT NULL,
+	company VARCHAR(30) NOT NULL,
+	year INTEGER NOT NULL,
+    price DOUBLE NOT NULL,
+	stock INTEGER NOT NULL,
     PRIMARY KEY (upc)
 );   
 
@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS Item(
 
 CREATE TABLE IF NOT EXISTS LeadSinger (
     upc INTEGER NOT NULL,
-    name VARCHAR(30),
+    name VARCHAR(30) NOT NULL,
     PRIMARY KEY (upc, name),
     FOREIGN KEY (upc) REFERENCES Item(upc)
     	ON DELETE CASCADE
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS LeadSinger (
 
 CREATE TABLE IF NOT EXISTS HasSong (
     upc INTEGER NOT NULL,
-    title VARCHAR(24),
+    title VARCHAR(24) NOT NULL,
     PRIMARY KEY (upc, title),
     FOREIGN KEY (upc) REFERENCES Item(upc)
     	ON DELETE CASCADE
@@ -40,21 +40,21 @@ CREATE TABLE IF NOT EXISTS HasSong (
 CREATE TABLE IF NOT EXISTS Customer (
 cid INTEGER NOT NULL AUTO_INCREMENT,
 	username VARCHAR(24) UNIQUE,
-  	password VARCHAR(60),
-	name CHAR(30),
-	address VARCHAR(30),
-	phone INTEGER(10),
+  	password VARCHAR(60) NOT NULL,
+	name CHAR(30) NOT NULL,
+	address VARCHAR(30) NOT NULL,
+	phone INTEGER(10) NOT NULL,
     PRIMARY KEY (cid)
     );
 
  -- Purchase (receiptId, date, cid, card#, expiryDate,expectedDate, deliveredDate)
 
 CREATE TABLE IF NOT EXISTS Purchase (
-	receiptId INTEGER NOT NULL,
-	date DATE,
-	cid INTEGER,
-	cardNo INTEGER,
-	expiryDate DATE,
+	receiptId INTEGER NOT NULL AUTO_INCREMENT,
+	date DATE NOT NULL,
+	cid INTEGER NOT NULL,
+	cardNo INTEGER NOT NULL,
+	expiryDate DATE NOT NULL,
 	expectedDate DATE,
 	deliveredDate DATE,
 	PRIMARY KEY( receiptId ),
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS Purchase (
 CREATE TABLE IF NOT EXISTS PurchaseItem (
 	receiptId INTEGER NOT NULL,
 	upc INTEGER NOT NULL,
-	quantity INTEGER,
+	quantity INTEGER NOT NULL,
 	PRIMARY KEY(receiptId, upc),
 	FOREIGN KEY(receiptId) REFERENCES Purchase(receiptId),
 	FOREIGN KEY(upc) REFERENCES Item(upc)
@@ -77,8 +77,8 @@ CREATE TABLE IF NOT EXISTS PurchaseItem (
 -- Returned (retid, date, receptId)
 CREATE TABLE IF NOT EXISTS Returned(
 	retid INTEGER NOT NULL AUTO_INCREMENT,
-	date DATE,
-	receiptId INTEGER,
+	date DATE NOT NULL,
+	receiptId INTEGER NOT NULL,
 	PRIMARY KEY(retid),
 	FOREIGN KEY(receiptId) REFERENCES Purchase(receiptId)
 );
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS Returned(
 CREATE TABLE IF NOT EXISTS ReturnItem (
 	retid INTEGER NOT NULL,
 	upc INTEGER NOT NULL,
-	quantity INTEGER,
+	quantity INTEGER NOT NULL,
 	PRIMARY KEY(retid, upc),
 	FOREIGN KEY (retid) REFERENCES Returned(retid),
 	FOREIGN KEY (upc) REFERENCES Item(upc)
@@ -215,4 +215,8 @@ FROM Purchase p, Item i, PurchaseItem pi
 WHERE pi.upc = i.upc AND pi.receiptId = p.receiptId
 GROUP BY i.upc ORDER BY sum(quantity) DESC;
 
-
+CREATE VIEW OutstandingOrders AS
+SELECT *
+FROM Purchase
+WHERE expectedDate IS NOT NULL
+AND deliveredDate IS NULL;

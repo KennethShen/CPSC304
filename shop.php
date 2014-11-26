@@ -1,7 +1,10 @@
 <?php
 include_once('includes/connection.php');
 include_once('./classes/Basket.php');
+include_once('includes/header.php');
 session_start();
+
+    echo '<a href="checkout.php"> Checkout </a>';
 
     echo "<form id='Search' method='post'>";
     echo "<input name='find_title'>";

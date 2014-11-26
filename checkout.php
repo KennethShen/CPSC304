@@ -1,5 +1,5 @@
 <?php
-    include_once(dirname(__FILE__)."/includes/header.php");
+include_once(dirname(__FILE__)."/includes/header.php");
 require_once(dirname(__FILE__)."/includes/connection.php");
 require_once(dirname(__FILE__)."/classes/Basket.php");
     ?>
@@ -12,7 +12,7 @@ if (isset($_POST['submitPayment'])){
     $cardNo = $_POST['cardNo'];
     $expiry = $_POST['expiry'];
     echo $_POST['submitPayment'];
-    echo $basket->checkout($cardNo, $expiry);
+    echo "Receipt ID is ".$basket->checkout($cardNo, $expiry);
 }
 ?>
 <table>
@@ -55,5 +55,5 @@ foreach ($contents as $item_upc => $unit_qty){
 <input id="expiry" name="expiry">
 <input type="submit" name="submitPayment" value="Pay Now">
 <?php
-print_r($details);
+//print_r($details);
 ?>
