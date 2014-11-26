@@ -1,6 +1,6 @@
 <?php
 include_once('includes/connection.php');
-
+include_once('./classes/Basket.php');
 session_start();
 
     echo "<form id='Search' method='post'>";
@@ -15,10 +15,11 @@ session_start();
     echo '<input name="find_leadsinger">';
     echo '<input name="want_qty">';
     echo '<input type="submit" name="submit" value="Search">';
+    echo '</form>';
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-      if (isset($_POST["submit"]) && $_POST["submit"] == "Search") {
+        if (isset($_POST["submit"]) && $_POST["submit"] == "Search") {
        /*
         Add a book title using the post variables title_id, title and pub_id.
         */
@@ -46,11 +47,9 @@ session_start();
         if (empty($leadsinger) && empty ($category)){
             $stmt->bind_param("s", $title);
         } elseif (empty($category)){
-            echo 'empty';
             $leadsinger = "%".$leadsinger."%";
             $stmt->bind_param("ss", $title, $leadsinger);
         } elseif (empty($leadsinger)){
-            echo 'notempty';
             $stmt->bind_param("ss", $title, $category);
         } else {
             $leadsinger = "%".$leadsinger."%";
@@ -83,24 +82,35 @@ print_r($row);
                 echo "<td>".$row['price']."</td><td>";
                 echo "<td>".$row['stock']."</td><td>";
                 //Display an option to add this item using the Javascript function and the hidden title_id
-                echo "<a href=\"javascript:addToBasket('".$row['upc']."');\">Add to Basket</a>";
+                echo "<a href=\"javascript:addToBasket(".$row['upc'].",".$want_qty.");\">Add to Basket ".$want_qty."</a>";
                 echo "</td></tr>";
             }
             echo "</table>";
         }
+        print_r($_SESSION);
+      } else if (isset($_POST['SUBMITADD']) && $_POST['SUBMITADD'] == "basket"){
+          $basket = new Basket();
+          $basket->addItem($_POST['want_upc'],$_POST['add_qty']);
       }
     }
 
 
 ?>
 
+<form id="addform" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+<input type ="hidden" name="want_upc" id="want_upc" value="" />
+<input type ="hidden" name="add_qty" id="add_qty" value="" />
+<input type ="hidden" name="SUBMITADD" value="basket" />
+</form>
+
 <script>
-function addToCart(titleId) {
+function addToBasket(upc, want_qty) {
     'use strict';
-    if (confirm('Are you sure you want to add to this title?')) {
+    if (confirm('Are you sure you want to add the cart?')) {
       // Set the value of a hidden HTML element in this form
-      var form = document.getElementById('delete');
-      form.title_id.value = titleId;
+      var form = document.getElementById('addform');
+      form.want_upc.value = upc;
+      form.add_qty.value = want_qty;
       // Post this form
       form.submit();
     }
