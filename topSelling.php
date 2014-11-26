@@ -40,32 +40,50 @@ include_once("includes/connection.php");
 
 if(isset($_POST['submit'])) {
     if (empty($_POST['date_top']) || empty($_POST['howmany'])) {
-        $error = "Please type!";
+        $error = "Please fill in every blank!";
         echo $error;
     } else {
-
-        $date_top = $_POST['date_top'];
         $howmany = $_POST['howmany'];
-        $topView = "SELECT upc, category, price, total
+        if(ctype_digit($howmany) == false){
+            echo "Please type number for how many top selling items you want to see!";
+        }
+        else {
+            $date_top = $_POST['date_top'];
+            $date_split = explode("-", $date_top);
+//        echo $date_split[1];
+//        echo $date_split[2];
+//        echo $date_split[0];
+            $date_val = checkdate($date_split[1], $date_split[2], $date_split[0]);
+
+            if ($date_val == false) {
+                echo "Please type valid date!";
+            } else {
+
+
+                $topView = "SELECT upc, category, price, total
 FROM topsell
 WHERE date=?
 ORDER BY total DESC
 LIMIT ?";
 
-        $toopstmt = $connection->prepare($topView);
-        $topstmt->bind_param("si", $date_top, $howmany);
-        $topstmt->execute();
-        $result = $topstmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            echo "<tr>";
-            echo "<td>" . $row['upc'] . "</td>";
-            echo "<td>" . $row['category'] . "</td>";
-            echo "<td>" . $row['price'] . "</td>";
-            echo "<td>" . $row['total'] . "</td>";
-            echo "</tr>";
-
+                $topstmt = $connection->prepare($topView);
+                $topstmt->bind_param("si", $date_top, $howmany);
+                $topstmt->execute();
+                $result = $topstmt->get_result();
+                if ($result->fetch_assoc() == null) {
+                    echo "Sorry, no purchase was made on that day!";
+                } else {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<tr>";
+                        echo "<td>" . $row['upc'] . "</td>";
+                        echo "<td>" . $row['category'] . "</td>";
+                        echo "<td>" . $row['price'] . "</td>";
+                        echo "<td>" . $row['total'] . "</td>";
+                        echo "</tr>";
+                    }
+                }
+            }
         }
-
     }
 }
 

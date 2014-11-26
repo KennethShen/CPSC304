@@ -72,7 +72,7 @@ if(isset($_POST['submit'])) {
     </head>
 <body>
 <div id="main">
-        <h1>PHP login session</h1>
+
         <div id="login">
             <h2>Login Form</h2>
             <form action="" method="post">
