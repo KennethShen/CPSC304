@@ -50,7 +50,7 @@
             
       } elseif (isset($_POST["submit"]) && $_POST["submit"] ==  "ADD") {       
        /*
-        Add an item title using the post variables item_upc, upc and quantity.
+        Add an item title using the post variables
         */
         $item_upc = $_POST["new_item_upc"];
         $title = $_POST["new_title"];
@@ -64,30 +64,35 @@
     
         $stmt = $connection->prepare("INSERT INTO Item (upc, title, type, category, company, year, price, stock) VALUES (?,?,?,?,?,?,?,?)");
         
-        // Bind the title and pub_id parameters, 'sss' indicates 3 strings
+        // Bind the title and pub_id parameters
         $stmt->bind_param("issssidi", $item_upc, $title, $type, $category, $company, $year, $price, $quantity);
         
-        // Execute the insert statement
-        if ($item_upc==0) {
+        // If the provided upc already exits, Update
+        // Otherwise execute the insert statement
+        if ($item_upc == 0) {
     		die("There was no item to be added. To add a new item, please go back and specify the fields. ");
     	} else {
-    		if($stmt->error) {       
-          printf("<b>Error: %s.</b>\n", $stmt->error); 
-        $stmt = $connection->prepare("UPDATE Item SET price=?, stock =? WHERE upc= ?");
-		$stmt->bind_param("dii", $price, $quantity, $item_upc);
-		$stmt->execute();
-        } else {
-          echo "<b>Successfully added: Item ".$title."</b>";
-        }
-    	$stmt->execute();
+    		if($item_upc == $item_upc) {
+    			$stmt = $connection->prepare("UPDATE Item SET price=?, stock =? WHERE upc= ?");
+				$stmt->bind_param("dii", $price, $quantity, $item_upc);
+				$stmt->execute();
+			} else {
+    			$stmt->execute();
+    		}
     	}
+    	
+    	if($stmt->error) {
+         printf("<b>Error: %s.</b>\n", $stmt->error);
+       } else {
+         echo "<b>Successfully added: UPC ".$item_upc."</b>";
+       }
       }
    }
 ?>
 
 <h2>Item Titles in Alphabetical Order</h2>
 <!-- Set up a table to view the book titles -->
-<table border=0 cellpadding=0 cellspacing=0>
+<table border=0 cellpadding=0 cellspacing=7>
 <!-- Create the table column headings -->
 
 <tr valign=center>
@@ -163,7 +168,7 @@
 -->
 
 <form id="add" name="add" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
-    <table border=0 cellpadding=0 cellspacing=0>
+    <table border=0 cellpadding=1 cellspacing=>
         <tr><td>UPC:</td><td><input type="text" size=30 name="new_item_upc"</td></tr>
         <tr><td>Item Title:</td><td><input type="text" size=30 name="new_title"</td></tr>
         <tr><td>Item Type CD/ DVD:</td><td> <input type="text" size=30 name="new_type"></td></tr>
