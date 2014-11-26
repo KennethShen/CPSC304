@@ -38,6 +38,7 @@ if(isset($_POST['submit'])) {
                 if(password_verify($form_password, $retrieved_password)){
                     echo "yay";
                     $_SESSION['login_user'] = $form_username; //Initializing session
+                    $_SESSION['user_id'];
                     header('Location: profile.php'); //Redirecting to other page
                     $log_check->free_result();
 

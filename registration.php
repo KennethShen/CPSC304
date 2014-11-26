@@ -1,7 +1,7 @@
 <?php
 include_once("includes/header.php");
 require_once("includes/connection.php");
-
+session_start();
 
 
 //Display registration form
@@ -87,8 +87,10 @@ function register() {
         $insert_stmt->close();
     }
     //echo mysqli_insert_id($connection);
+    $cid = $connection->insert_id;
     if (mysqli_insert_id($connection) > -1) {
         echo $username.", you are now registered. Thank you!<br><a href=logout.php>Logout</a> | <a href=index.php>Index</a>";
+        $_SESSION['user_id'] = $cid;
     } else echo "An error has occured. Please call help\n";
 
     $connection->close();

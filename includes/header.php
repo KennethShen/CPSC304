@@ -33,3 +33,7 @@ function formSubmit(titleId) {
 }
 </script>
 </head>
+<body>
+<?php 
+    include_once("nav.php");
+?>

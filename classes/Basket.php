@@ -76,7 +76,7 @@ class Basket{
     function checkout($cardNo, $expiry){
         global $connection;
         // TODO Extract cid.
-        $cid = 334;
+        $cid = $_SESSION['user_id'];
         try {
             // Start transaction.
             $connection->autocommit(false);
