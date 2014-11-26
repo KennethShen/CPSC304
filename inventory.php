@@ -27,14 +27,14 @@
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-      if (isset($_POST["submitDelete"]) && $_POST["submitDelete"] == "DELETE") {
+      if (isset($_POST["submitDelete"]) && $_POST["submitDelete"] == "CLEAR") {
        /*
           Delete the selected item title using the item_upc
         */
        
        // Create a delete query prepared statement with a ? for the item_upc
        //$stmt = $connection->prepare("DELETE FROM Item WHERE upc=?");
-       $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, type=type, category=category, company=company, year=year, price=price, stock = 0 WHERE upc = ?");
+       $stmt = $connection->prepare("UPDATE Item SET stock = 0 WHERE upc = ?");
        $deleteUPC = $_POST['item_upc'];
        // Bind the title_id parameter, 's' indicates a string value
        $stmt->bind_param("s", $deleteUPC);
@@ -45,7 +45,7 @@
        if($stmt->error) {
          printf("<b>Error: %s.</b>\n", $stmt->error);
        } else {
-         echo "<b>Successfully deleted: Now 0 quantity for Item UPC ".$deleteUPC."</b>";
+         echo "<b>Successfully cleared: 0 quantity for Item UPC ".$deleteUPC."</b>";
        }
             
       } elseif (isset($_POST["submit"]) && $_POST["submit"] ==  "ADD") {       
@@ -66,17 +66,21 @@
         
         // Bind the title and pub_id parameters, 'sss' indicates 3 strings
         $stmt->bind_param("issssidi", $item_upc, $title, $type, $category, $company, $year, $price, $quantity);
-        // Execute the insert statement
-        $stmt->execute();
         
-        if($stmt->error) {       
-          printf("<b>Edited Quantity and/ or Unit Price</b>\n", $stmt->error); 
-        $stmt = $connection->prepare("UPDATE Item SET upc=upc, title=title, type=type, category=category, company=company, year=year, price=?, stock =? WHERE upc= ?");
+        // Execute the insert statement
+        if ($item_upc==0) {
+    		die("There was no item to be added. To add a new item, please go back and specify the fields. ");
+    	} else {
+    		if($stmt->error) {       
+          printf("<b>Error: %s.</b>\n", $stmt->error); 
+        $stmt = $connection->prepare("UPDATE Item SET price=?, stock =? WHERE upc= ?");
 		$stmt->bind_param("dii", $price, $quantity, $item_upc);
 		$stmt->execute();
         } else {
           echo "<b>Successfully added: Item ".$title."</b>";
         }
+    	$stmt->execute();
+    	}
       }
    }
 ?>
@@ -114,7 +118,7 @@
     // Hidden value is used if the delete link is clicked
     echo "<input type=\"hidden\" name=\"item_upc\" value=\"-1\"/>";
    // We need a submit value to detect if delete was pressed 
-    echo "<input type=\"hidden\" name=\"submitDelete\" value=\"DELETE\"/>";
+    echo "<input type=\"hidden\" name=\"submitDelete\" value=\"CLEAR\"/>";
 
     /****************************************************
      STEP 4: Display the list of item titles
@@ -132,7 +136,7 @@
 	   echo "<td>".$row['stock']."</td><td>";
        
        //Display an option to delete this title using the Javascript function and the hidden item_upc
-       echo "<a href=\"javascript:formSubmit('".$row['upc']."');\">DELETE</a>";
+       echo "<a href=\"javascript:formSubmit('".$row['upc']."');\">CLEAR</a>";
        echo "</td></tr>";
         
     }
@@ -178,7 +182,7 @@
 <script>
 function formSubmit(titleId) {
     'use strict';
-    if (confirm('Are you sure you want to delete this item?')) {
+    if (confirm('Are you sure you want to clear this item?')) {
       // Set the value of a hidden HTML element in this form
       var form = document.getElementById('delete');
       form.item_upc.value = titleId;
