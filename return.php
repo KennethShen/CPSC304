@@ -42,7 +42,7 @@ if(!isset($_POST["cid"]) || !isset($_POST["receiptId"]) || !isset($_POST["UPC"])
             $riStmt = $connection->prepare($returnItemString);
             $riStmt->bind_param("iii", $returnID, $upc, $quantity);
             $riStmt->execute();
-            echo "The fund amount has been issued to your credit card.<br>";
+            echo "The refund amount has been issued to your credit card.<br>";
             $updateString = "UPDATE PurchaseItem SET receiptId = receiptId, upc = upc, quantity = ? WHERE receiptId = ? AND upc = ?";
             $newQuantity = $search['quantity'] - $quantity;
             $updateStmt = $connection->prepare($updateString);
