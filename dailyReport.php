@@ -1,11 +1,4 @@
-<html>
-<body>
-<form action = "" method = "post">
-    Year : <input type = "text" name = "year">
-    Month: <input type = "text" name = "month">
-    Day  : <input type = "text" name = "day">
-    <input type = "submit">
-</form>
+
 <?php
 require_once("includes/connection.php");
 include_once("includes/header.php");
@@ -15,6 +8,17 @@ if(mysqli_connect_errno()){
 }
 
 ?>
+<body>
+<br>
+</body>
+<body>
+<form action = "" method = "post">
+    Year : <input type = "text" name = "year" maxlength="4">
+    Month: <input type = "text" name = "month" maxlength="2">
+    Day  : <input type = "text" name = "day" maxlength="2">
+    <input type = "submit">
+</form>
+</body>
 <body>
 <table>
     <tr valign = center>
@@ -27,7 +31,7 @@ if(mysqli_connect_errno()){
     <?php
 
     if((!isset($_POST["year"])) ||(!isset($_POST["month"])) || (!isset($_POST["day"]))){
-        Echo "Please specify a date.";
+        Echo "Please specify a date.<br>";
     } else {
     $year = $_POST["year"];
     $month = $_POST["month"];

@@ -1,5 +1,15 @@
-<html>
+<?php
+require_once("includes/connection.php");
+include_once("includes/header.php");
+    function inputCheck($string, $type){
+        if($type == "year"){
+
+        }
+    }
+?>
+
 <body>
+<br>
 <form action = "" method = "post">
     Customer ID: <input type = "text" name = "cid"><br>
     Receipt ID: <input type = "text" name = "receiptId"><br>
@@ -8,15 +18,13 @@
     <input type = "submit">
 </form>
 <?php
-require_once("includes/connection.php");
-include_once("includes/header.php");
 echo "Please enter your Customer ID, Receipt ID, UPC of the item you wish to return, and the quantity of the item that you are returning.<br>";
 if(!isset($_POST["cid"]) || !isset($_POST["receiptId"]) || !isset($_POST["UPC"]) || !isset($_POST["returnQuantity"])){
 } else {
-    $cid = $_POST["cid"];
-    $rid = $_POST["receiptId"];
-    $upc = $_POST["UPC"];
-    $quantity = $_POST["returnQuantity"];
+    $cid = intval($_POST["cid"]);
+    $rid = intval($_POST["receiptId"]);
+    $upc = intval($_POST["UPC"]);
+    $quantity = intval($_POST["returnQuantity"]);
     $queryString = "SELECT pi.receiptId, pi.quantity, p.date FROM Purchase p, PurchaseItem pi, Item i WHERE p.receiptId = pi.receiptId" .
         " AND i.upc = pi.upc AND pi.upc = ? AND pi.receiptId = ? AND p.cid = ? AND p.date > CURRENT_DATE() - 15";
     $stmt = $connection->prepare($queryString);
