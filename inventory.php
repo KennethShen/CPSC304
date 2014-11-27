@@ -100,7 +100,7 @@
  		  	echo "<b>Please provide Category in one of the following types: rock, pop, rap, country, classical, new age or instrumental.</b><br>";
  		 	 if (ctype_digit($year) == false) 
  		  	echo "<b>Please provide Year in numerical value.</b><br>";
- 		  	if (ctype_digit($price) == false) 
+ 		  	if (is_float($price) == false) 
  		 	 echo "<b>Please provide Price in numerical value.</b><br>";
  		 	 if (ctype_digit($quantity) == false) 
  		 	 echo "<b>Please provide Quantity in numerical value.</b><br>";
