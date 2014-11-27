@@ -11,9 +11,9 @@ if (isset($_SESSION['user_id'])){
     echo 'Please login to checkout.';
 }
     echo "<form id='Search' method='post'>";
-    echo "Title";
+    echo "Title: ";
     echo "<input name='find_title'><br>";
-    echo "Category";
+    echo "Category: ";
     echo "<select name='find_category'>";
     echo "<option value ='' selected='selected'>--------------------</option>";
     $categories = ['rock', 'pop', 'rap', 'country', 'classical', 'new age', 'instrumental'];
@@ -21,10 +21,10 @@ if (isset($_SESSION['user_id'])){
         echo "<option value='$cat'>$cat</option>";
     }
     echo "</select><br>";
-    echo 'Lead Singer';
+    echo 'Lead Singer: ';
     echo '<input name="find_leadsinger"><br>';
-    echo "quantity to buy";
-    echo '<input name="want_qty"><br>';
+    echo "Quantity to buy: ";
+    echo '<input type="number" name="want_qty" required><br>';
     echo '<input type="submit" name="submit" value="Search">';
     echo '</form>';
 
@@ -32,6 +32,9 @@ if (isset($_SESSION['user_id'])){
 
         if (isset($_POST["submit"]) && $_POST["submit"] == "Search") {
 
+        if (!ctype_digit($_POST["want_qty"])){
+            $_SESSION['alert']['error'] = "Need an integer value for quantity.";
+        }
         $title = "%".$_POST["find_title"]."%";
         $category = $_POST["find_category"];
         $leadsinger = $_POST["find_leadsinger"];
@@ -69,8 +72,13 @@ if (isset($_SESSION['user_id'])){
         if($stmt->error) {
           printf("<b>Error: %s.</b>\n", $stmt->error);
         } else {
+            $result = $stmt->get_result();
+            if ($result->num_rows == 1){
+                $row = $result->fetch_assoc();
+                
+            }
             echo '<table>';
-            echo "<table border=0 cellpadding=0 cellspacing=0>";
+            echo "<table border=1 cellpadding=1 cellspacing=1>";
             echo "<!-- Create the table column headings -->";
 
             echo "<tr valign=center>";
@@ -81,15 +89,21 @@ if (isset($_SESSION['user_id'])){
             echo "<td class=rowheader>Stock</td>";
             echo "</tr>";
 
-            $result = $stmt->get_result();
             while($row = $result->fetch_assoc()){
                 echo "<td>".$row['upc']."</td>";
                 echo "<td>".$row['title']."</td>";
                 echo "<td>".$row['category']."</td>";
-                echo "<td>".$row['price']."</td><td>";
+                echo "<td>".$row['price']."</td>";
                 echo "<td>".$row['stock']."</td><td>";
                 //Display an option to add this item using the Javascript function and the hidden title_id
-                echo "<a href=\"javascript:addToBasket(".$row['upc'].",".$want_qty.");\">Add to Basket ".$want_qty."</a>";
+                if ($row['stock'] == 0){
+                    echo "<b style='color: red'>Out of Stock</b>";
+                } else if ( $want_qty > $row['stock']) {
+                    echo "<b style='color: red'>Not enough stock.<br>";
+                    echo "<a href=\"javascript:addToBasket(".$row['upc'].",".$row['stock'].");\">Add ".$row['stock']." to Basket instead.</a></b>";
+                } else {
+                    echo "<a href=\"javascript:addToBasket(".$row['upc'].",".$want_qty.");\">Add $want_qty to Basket </a>";
+                }
                 echo "</td></tr>";
             }
             echo "</table>";
@@ -110,15 +124,17 @@ if (isset($_SESSION['user_id'])){
 </form>
 
 <script>
-function addToBasket(upc, want_qty) {
+function addToBasket(upc, want_qty, stock) {
     'use strict';
-    if (confirm('Are you sure you want to add the cart?')) {
+    qty = want_qty;
+    if (want_qty > stock && confirm("There is only " + stock + " of the requested item left. Add all of it?")){
+        qty = stock;
+    }
       // Set the value of a hidden HTML element in this form
       var form = document.getElementById('addform');
       form.want_upc.value = upc;
-      form.add_qty.value = want_qty;
+      form.add_qty.value = qty;
       // Post this form
       form.submit();
-    }
 }
 </script>

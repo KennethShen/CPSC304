@@ -11,8 +11,6 @@ if (!isset($_SESSION['user_id'])){
     header("Location: shop.php");
 }
 else if (isset($_POST['submitPayment'])){
-    echo "Trying to pay.<br>";
-    //TODO Validate. Possibly split expiry into month/year.
     $cardNo = $_POST['cardNo'];
     $expYear = $_POST['year'];
     $expMonth = $_POST['month'];
@@ -28,14 +26,13 @@ else if (isset($_POST['submitPayment'])){
         }
     } else {
         if(checkdate(intval($expMonth), 1, intval($expYear))) {
-            echo $_POST['submitPayment'];
             $expiry = $expYear."-".$expMonth."-01";
-            echo $expiry;
             $receiptId = $basket->checkout($cardNo, $expiry);
 
-            echo "Receipt ID is " . $receiptId;
             if ($receiptId) {
                 header("Location: receipt.php?receiptId=" . $receiptId);
+            } else {
+                header("Location: checkout.php");
             }
         } else {
             echo "Invalid expiry date. <br>";
@@ -59,7 +56,10 @@ else if (isset($_POST['submitPayment'])){
 <table>
 <thead>
 <tr>
+<th>Item UPC</th>
 <th>Item Name</th>
+<th>Category</th>
+<th>Store Stock</th>
 <th>Unit Price</th>
 <th>Purchase Quantity</th>
 <th>Price</th>
@@ -78,9 +78,16 @@ if (!empty($contents)){
         $totalprice += $subtotal;
 
         echo '<tr style="text-align: right">';
+        echo '<td>'.$item_upc.'</td>';
         echo '<td>'.$details[$item_upc]['title'].'</td>';
+        echo '<td>'.$details[$item_upc]['category'].'</td>';
+        echo '<td>'.$details[$item_upc]['stock'].'</td>';
         echo '<td>'.$unit_price.'</td>';
-        echo '<td>'.$unit_qty.'</td>';
+        if ($details[$item_upc]['stock'] < $unit_qty){
+            echo '<td style="color: red"><b>'.$unit_qty.'</b></td>';
+        } else {
+            echo '<td>'.$unit_qty.'</td>';
+        }
         echo '<td>'.$subtotal.'</td>';
         echo '</tr>';
     } 

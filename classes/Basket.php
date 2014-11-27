@@ -78,14 +78,12 @@ class Basket{
 
     function checkout($cardNo, $expiry){
         global $connection;
-        // TODO Extract cid.
         $cid = $_SESSION['user_id'];
         try {
             // Start transaction.
             $connection->autocommit(false);
             // Insert the purchase information first.
             $stmt = $connection->prepare("INSERT INTO Purchase(date, cid, cardNo, expiryDate) VALUES (CURRENT_DATE ,?,?,?)");
-            echo time("Y-m-d");
             $stmt->bind_param('iis', $cid, $cardNo, $expiry);
 
             $result = $stmt->execute();
@@ -105,11 +103,12 @@ class Basket{
                 if ($buyqty > $details[$upc]['stock']){
                     // Item not in stock. Abort.
                     // Someone must have bought it before us.
+                    // echo "Someone bought stuff before us";
                     throw new Exception('Not enough requested stock for UPC '.$upc);
                 }
                 $stmt = $connection->prepare("INSERT INTO PurchaseItem(receiptId, upc, quantity) VALUES(?,?,?)");
                 $stmt->bind_param("iii", $receiptId, $upc, $buyqty);
-                $stmt->execute();
+                $result = $stmt->execute();
                 if (!$result){
                     throw new Exception($stmt->error);
                 }
@@ -118,7 +117,7 @@ class Basket{
                 $stmt = $connection->prepare("UPDATE Item SET stock = ? WHERE upc = ?");
                 $remainingStock = $details[$upc]['stock'] - $buyqty;
                 $stmt->bind_param('ii', $remainingStock, $upc);
-                $stmt->execute();
+                $result = $stmt->execute();
                 if (!$result){
                     throw new Exception($stmt->error);
                 }
@@ -127,7 +126,8 @@ class Basket{
             $this->emptyBasket();
         } catch (Exception $e){
             $connection->rollback();
-            echo $e->getMessage();
+            $_SESSION['alert']['error'] = $e->getMessage();
+            $receiptId = false;
         }
         $connection->autocommit(true);
         return $receiptId;
