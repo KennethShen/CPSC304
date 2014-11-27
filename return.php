@@ -14,6 +14,7 @@ include_once("includes/header.php");
 </form>
 <?php
 echo "Please enter your Customer ID, Receipt ID, UPC of the item you wish to return, <br> and the quantity of the item that you are returning.<br>";
+if(isset($_POST["receiptId"]) && isset($_POST["UPC"]) && isset($_POST["returnQuantity"])){
 if( !ctype_digit($_POST["receiptId"]) || !ctype_digit($_POST["UPC"]) || !ctype_digit($_POST["returnQuantity"]) ){
     if(!ctype_digit($_POST["receiptId"])){
         echo "Invalid Receipt ID: Only numbers allowed <br>";
@@ -76,6 +77,7 @@ if( !ctype_digit($_POST["receiptId"]) || !ctype_digit($_POST["UPC"]) || !ctype_d
             echo "The purchase was made more than 15 days ago. <br>";
         }
     }
+}
 }
 ?>
 </body>

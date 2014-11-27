@@ -7,8 +7,8 @@ USE CPSC304;
 CREATE TABLE IF NOT EXISTS Item(
 	upc INTEGER NOT NULL,
 	title CHAR(30) NOT NULL,
-    type VARCHAR(3) NOT NULL,
-	category VARCHAR(30) NOT NULL,
+    type ENUM('CD', 'DVD') NOT NULL,
+	category ENUM('rock','pop','rap','country','classical','new age','instrumental') NOT NULL,
 	company VARCHAR(30) NOT NULL,
 	year INTEGER NOT NULL,
     price DOUBLE NOT NULL,
