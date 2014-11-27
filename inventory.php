@@ -202,8 +202,20 @@
     <table border=0 cellpadding=1 cellspacing=>
         <tr><td>UPC:</td><td><input type="text" size=30 name="new_item_upc"</td></tr>
         <tr><td>Item Title:</td><td><input type="text" size=30 name="new_title"</td></tr>
-        <tr><td>Item Type:</td><td> <input type="text" size=30 name="new_type"></td></tr>
-        <tr><td>Item Category:</td><td> <input type="text" size=30 name="new_category"></td></tr>
+        <tr><td>Item Type:</td><td><select name="new_type">
+        <option value='' selected='selected'>-------</option>
+        <option value='CD'>CD</option>
+        <option value='DVD'>DVD</option>
+        </select></td></tr>
+        <tr><td>Category:</td><td><select name='new_category'>
+        <option value ='' selected='selected'>------------------</option>
+<?php
+    $categories = ['rock', 'pop', 'rap', 'country', 'classical', 'new age', 'instrumental'];
+    foreach ($categories as $cat){
+        echo "<option value='$cat'>$cat</option>";
+    }
+?>
+        </select></td></tr>
         <tr><td>Company Name:</td><td> <input type="text" size=30 name="new_company"></td></tr>
         <tr><td>Year:</td><td> <input type="text" size=30 name="new_year"></td></tr>
         <tr><td>Unit Price:</td><td> <input type="text" size=5 name="new_unit_price"></td></tr>

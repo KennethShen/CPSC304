@@ -40,4 +40,14 @@ function formSubmit(titleId) {
 <body>
 <?php 
     include_once("nav.php");
+    echo "<div>";
+    // Display alerts and clear them.
+    if(isset($_SESSION['alert']['error'])){
+        echo $_SESSION['alert']['error'];
+    }
+    if(isset($_SESSION['alert']['info'])){
+        echo $_SESSION['alert']['info'];
+    }
+    $_SESSION['alert'] = array();
+    echo "</div>";
 ?>

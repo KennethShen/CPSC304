@@ -15,7 +15,7 @@ if (isset($_SESSION['user_id'])){
     echo "<input name='find_title'><br>";
     echo "Category";
     echo "<select name='find_category'>";
-    echo "<option value ='' selected='selected'>";
+    echo "<option value ='' selected='selected'>--------------------</option>";
     $categories = ['rock', 'pop', 'rap', 'country', 'classical', 'new age', 'instrumental'];
     foreach ($categories as $cat){
         echo "<option value='$cat'>$cat</option>";

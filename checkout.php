@@ -41,8 +41,21 @@ else if (isset($_POST['submitPayment'])){
             echo "Invalid expiry date. <br>";
         }
     }
+} else if (isset($_POST['emptyCart'])){
+    $basket->emptyBasket();
+    $_SESSION['alert']['info'] = "Cleared Basket.";
+    header("Location: checkout.php");
+} else if (isset($_POST['removeUpc'])) {
+    $basket->removeItem($_POST['removeUpc']);
+        header("Location: checkout.php");
 }
 ?>
+
+<br>
+<form name="emptyCartForm" method="POST">
+<input type="submit" name="emptyCart" value="Empty Cart">
+</form>
+
 <table>
 <thead>
 <tr>

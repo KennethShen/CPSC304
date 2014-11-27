@@ -39,6 +39,10 @@ class Basket{
         }
     }
 
+    function removeItem($upc){
+        unset($_SESSION['basket'][$upc]);
+    }
+
     function getDetails(){
         global $connection;
         if(isset($_SESSION['basket'])){
