@@ -42,9 +42,8 @@ else if (isset($_POST['submitPayment'])){
     $basket->emptyBasket();
     $_SESSION['alert']['info'] = "Cleared Basket.";
     header("Location: checkout.php");
-} else if (isset($_POST['removeUpc'])) {
-    $basket->removeItem($_POST['removeUpc']);
-        header("Location: checkout.php");
+} else if (isset($_POST['SUBMITREMOVE'])){
+    $basket->removeItem($_POST['remove_upc']);
 }
 ?>
 
@@ -89,15 +88,19 @@ if (!empty($contents)){
             echo '<td>'.$unit_qty.'</td>';
         }
         echo '<td>'.$subtotal.'</td>';
+        echo "<td><a href=\"javascript:removeFromBasket($item_upc);\">Remove from basket </a></td>";
         echo '</tr>';
     } 
 } else {
-    echo "<tr><td colspan=4 style='text-align:center'>No Items in your Basket <br><a href=\"shop.php\">Go and shop.</td></tr>";
+    echo "<tr><td colspan=7 style='text-align:center'>No Items in your Basket <br><a href=\"shop.php\">Go and shop.</td></tr>";
 }
 ?>
 </tbody>
 <tfoot><tr>
-<th colspan=3 style="text-align: right">Total</th>
+<th colspan=6></th>
+<th>----------------</th>
+</tr><tr>
+<th colspan=6 style="text-align: right">Total</th>
 <th><?php echo $totalprice ?></td>
 </tr></tfoot>
 </table>
@@ -111,6 +114,21 @@ Expiry Date:<br> Year:
 Month:
 <input id="expiry" name="month" maxlength = "2"><br>
 <input type="submit" name="submitPayment" value="Pay Now">
-<?php
-//print_r($details);
-?>
+</form>
+
+
+<script>
+function removeFromBasket(upc) {
+    'use strict';
+      // Set the value of a hidden HTML element in this form
+      var form = document.getElementById('removeform');
+      form.remove_upc.value = upc;
+      // Post this form
+      form.submit();
+}
+</script>
+
+<form id="removeform" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+<input type ="hidden" name="remove_upc" id="remove_upc" value="" />
+<input type ="hidden" name="SUBMITREMOVE" value="basket" />
+</form>

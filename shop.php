@@ -73,10 +73,6 @@ if (isset($_SESSION['user_id'])){
           printf("<b>Error: %s.</b>\n", $stmt->error);
         } else {
             $result = $stmt->get_result();
-            if ($result->num_rows == 1){
-                $row = $result->fetch_assoc();
-                
-            }
             echo '<table>';
             echo "<table border=1 cellpadding=1 cellspacing=1>";
             echo "<!-- Create the table column headings -->";
@@ -90,6 +86,11 @@ if (isset($_SESSION['user_id'])){
             echo "</tr>";
 
             while($row = $result->fetch_assoc()){
+                $stock = $row['stock'];
+                $upc = $row['upc'];
+                if ($result->num_rows == 1){
+                   echo "<script>addToBasket($upc,$want_qty,$stock);</script>";
+                }
                 echo "<td>".$row['upc']."</td>";
                 echo "<td>".$row['title']."</td>";
                 echo "<td>".$row['category']."</td>";
@@ -100,9 +101,9 @@ if (isset($_SESSION['user_id'])){
                     echo "<b style='color: red'>Out of Stock</b>";
                 } else if ( $want_qty > $row['stock']) {
                     echo "<b style='color: red'>Not enough stock.<br>";
-                    echo "<a href=\"javascript:addToBasket(".$row['upc'].",".$row['stock'].");\">Add ".$row['stock']." to Basket instead.</a></b>";
+                    echo "<a href=\"javascript:addToBasket($upc, $want_qty, $stock);\">Add ".$row['stock']." to Basket instead.</a></b>";
                 } else {
-                    echo "<a href=\"javascript:addToBasket(".$row['upc'].",".$want_qty.");\">Add $want_qty to Basket </a>";
+                    echo "<a href=\"javascript:addToBasket($upc, $want_qty, $stock);\">Add $want_qty to Basket </a>";
                 }
                 echo "</td></tr>";
             }
@@ -126,7 +127,7 @@ if (isset($_SESSION['user_id'])){
 <script>
 function addToBasket(upc, want_qty, stock) {
     'use strict';
-    qty = want_qty;
+    var qty = want_qty;
     if (want_qty > stock && confirm("There is only " + stock + " of the requested item left. Add all of it?")){
         qty = stock;
     }

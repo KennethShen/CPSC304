@@ -18,6 +18,13 @@ if(isset($_GET['receiptId']) && is_numeric($_GET['receiptId'])){
     echo "<tr><th>Receipt ID</th><td>".$receipt['receiptId']."</td></tr>";
     echo "<tr><th>Purchase Date</th><td>".$receipt['date']."</td></tr>";
     echo "<tr><th>Expected Date</th><td>".$receipt['expectedDate']."</td></tr>";
+    echo "<tr><th>Delivered Date</th><td>";
+    if (is_null($receipt['deliveredDate'])){
+        echo "N/A";
+    } else {
+        echo $receipt['deliveredDate'];
+    }
+    echo "</td></tr>";
     echo "</table><p>";
 
     $sqlquery = "SELECT pi.upc AS upc, i.title, type, category, company, year, price, quantity, price * quantity AS subtotal ";
