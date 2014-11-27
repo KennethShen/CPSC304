@@ -122,21 +122,21 @@ INSERT INTO Item
 VALUES(13, 'two', 'CD', 'classical','Gods Hand', 2014, 15.50, 50);
 
 INSERT INTO Customer
-VALUES(1,'name', '12', 'Justin Bieber', 'somewhere', 5017);
+VALUES(1,'name', '$2a$10$btcjSYCmGdZomibJBQAG5eDZrnMHunu8He/5ozjDdf8Lpzx5m.2l.', 'Justin Bieber', 'somewhere', 5017);
 INSERT INTO Customer
-VALUES(2,'Bieber', 'password', 'Kenneth', 'home', 56132);
+VALUES(2,'Bieber', '$2a$10$eSkPPfOyx0i9Gl.4G8gs4e0v/n84tQB4KCORosn/e6.c3yh2Wmyv.', 'Kenneth', 'home', 56132);
 INSERT INTO Customer
-VALUES(3,'something', '134', 'Olivia', 'Mars', 10823);
+VALUES(3,'something', '$2a$10$jDIwMuNQKj4hik4vP1wX.eIfCflJZuNNsBi9ieyFqQuDOLo0TqDR2', 'Olivia', 'Mars', 10823);
 INSERT INTO Customer
-VALUES(4, 'thatthing', '4321', 'April', 'Sun', 135155);
+VALUES(4, 'thatthing', '$2a$10$wXifjBmTeUTW8VIdLADwB.ng1RTCcvPOBa8pXZzTlxEoS7SOR6Uoe', 'April', 'Sun', 135155);
 INSERT INTO Customer
-VALUES(5, 'aname', 'something', 'Daniel', 'Canada', 16555);
+VALUES(5, 'aname', '$2a$10$BTyr70BWObZPWCsyg50LCOhBEHwa8VUceHtjeJkZJVqEIGOkGO3gm', 'Daniel', 'Canada', 16555);
 INSERT INTO Customer
-VALUES(6, 'thatname', 'thatthing', 'Tom', 'nowhere', 549412);
+VALUES(6, 'thatname', '$2a$10$QTmXTjIUYNg/OpvuT8IcYeSesktc5v02TAGbf/D9cMQxIQRVA.UQe', 'Tom', 'nowhere', 549412);
 INSERT INTO Customer
-VALUES(7, 'toolazy', 'dunno', 'Bob', 'there', 515161);
+VALUES(7, 'toolazy', '$2a$10$/4l5kpdRBc4bbkb6MzCCweykrSA9v96kk/Vn10G3rz.N9JRvijUAC', 'Bob', 'there', 515161);
 INSERT INTO Customer
-VALUES(8, 'somdsa', 'whaatever', 'George', 'here', 575415);
+VALUES(8, 'somdsa', '$2a$10$5098/UUE5BSnNaUZmvyQLe/vwyGfnOHUhmf8gBLOddi8j04VqEBsu', 'George', 'here', 575415);
 
 INSERT INTO Purchase
 VALUES(1, CURRENT_DATE(),	1, 16516161, CURRENT_DATE()+3, CURRENT_DATE()+4, CURRENT_DATE()+2);
