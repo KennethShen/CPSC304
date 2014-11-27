@@ -35,7 +35,7 @@ if(!isset($_POST["cid"]) || !isset($_POST["receiptId"]) || !isset($_POST["UPC"])
     $rid = intval($_POST["receiptId"]);
     $upc = intval($_POST["UPC"]);
     $quantity = intval($_POST["returnQuantity"]);
-    $queryString = "SELECT pi.receiptId, pi.quantity, p.date FROM Purchase p, PurchaseItem pi, Item i WHERE p.receiptId = pi.receiptId" .
+    $queryString = "SELECT pi.receiptId, pi.quantity, p.date, i.price FROM Purchase p, PurchaseItem pi, Item i WHERE p.receiptId = pi.receiptId" .
         " AND i.upc = pi.upc AND pi.upc = ? AND pi.receiptId = ? AND p.cid = ?";
     $stmt = $connection->prepare($queryString);
     $stmt->bind_param("iii", $upc, $rid, $cid);
@@ -45,6 +45,7 @@ if(!isset($_POST["cid"]) || !isset($_POST["receiptId"]) || !isset($_POST["UPC"])
     if ($search == NULL) {
         echo "<br>No purchase found for the given UPC, Receipt ID, and Customer ID.<br>";
     } else {
+        $amountReturned = $quantity * $search['price']; 
         $daysAgo = new DateTime();
         $receiptDate = date_create($search["date"]);
         $interval = $daysAgo->diff($receiptDate);
@@ -54,8 +55,9 @@ if(!isset($_POST["cid"]) || !isset($_POST["receiptId"]) || !isset($_POST["UPC"])
             } else if ($quantity < 1) {
                 echo "Please enter a quantity larger than 0.<br>";
             } else {
-                $checkString = "SELECT * FROM returned r, returnItem ri WHERE r.retId = ri.retId AND r.receiptId = ? AND ri.upc = ?";
+                $checkString = "SELECT * FROM Returned r, ReturnItem ri WHERE r.retId = ri.retId AND r.receiptId = ? AND ri.upc = ?";
                 $checkStmt = $connection->prepare($checkString);
+                echo $connection->error;
                 $checkStmt->bind_param("ii", $rid, $upc);
                 $checkStmt->execute();
                 $result = $checkStmt->get_result();
@@ -63,17 +65,17 @@ if(!isset($_POST["cid"]) || !isset($_POST["receiptId"]) || !isset($_POST["UPC"])
                 if($search != NULL){
                     echo "You've returned the product in this receipt already<br>";
                 } else {
-                    $returnString = "INSERT INTO returned (retid, date, receiptId) VALUES (NULL,CURRENT_DATE(),?)";
+                    $returnString = "INSERT INTO Returned (retid, date, receiptId) VALUES (NULL,CURRENT_DATE(),?)";
                     $retSt = $connection->prepare($returnString);
                     $retSt->bind_param("i", $rid);
                     $retSt->execute();
                     $returnID = $connection->insert_id;
                     echo "<br>Your Return ID  is: " . $returnID . "<br>";
-                    $returnItemString = "INSERT INTO returnItem(retid, upc, quantity) VALUES (?,?,?)";
+                    $returnItemString = "INSERT INTO ReturnItem(retid, upc, quantity) VALUES (?,?,?)";
                     $riStmt = $connection->prepare($returnItemString);
                     $riStmt->bind_param("iii", $returnID, $upc, $quantity);
                     $riStmt->execute();
-                    echo "The refund amount has been issued to your credit card.<br>";
+                    echo "The refund amount ".$amountReturned." has been issued to your credit card.<br>";
                 }
             }
         } else {
