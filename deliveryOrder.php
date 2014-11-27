@@ -3,14 +3,17 @@ require_once("includes/connection.php");
 include_once("includes/header.php");
 
 ?>
+<body>
 
+</body>
 <body>
 <br>
 <form action = "" method = "post">
-    Receipt ID: <input type = "text" name = "ReceiptID"><br><br>
+    Receipt ID: <input type = "text" name = "ReceiptID"> <br> Enter Receipt ID alone to display the delivery date of the receipt<br>
     Year: <input type = "text" name = "Year">
     Month: <input type = "text" name = "Month">
-    Day: <input type = "text" name = "Day">
+    Day: <input type = "text" name = "Day"><br>
+    Enter all the fields to change the delivery date<br>
     <input type = "submit">
 </form>
 
@@ -32,8 +35,7 @@ include_once("includes/header.php");
             if(checkdate(intval($_POST["Month"]), intval($_POST["Day"]), intval($_POST["Year"]))) {
                 $stringDate = $_POST["Year"] . "-" . $_POST["Month"] . "-" . $_POST["Day"];
                 $enteredDate = date_create($stringDate);
-                $dif = $enteredDate->diff($curDate);
-                if ($dif->d >= 0) {
+                if ($enteredDate > $curDate) {
                     $queryString = "UPDATE purchase SET deliveredDate = ? WHERE receiptId = ?";
                     $updateStmt = $connection->prepare($queryString);
                     $updateStmt->bind_param("si", $stringDate, $rID);

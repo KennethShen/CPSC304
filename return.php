@@ -61,7 +61,7 @@ if(!isset($_POST["cid"]) || !isset($_POST["receiptId"]) || !isset($_POST["UPC"])
                 $result = $checkStmt->get_result();
                 $search = $result->fetch_assoc();
                 if($search != NULL){
-                    echo "You've return the product in this receipt already";
+                    echo "You've returned the product in this receipt already<br>";
                 } else {
                     $returnString = "INSERT INTO returned (retid, date, receiptId) VALUES (NULL,CURRENT_DATE(),?)";
                     $retSt = $connection->prepare($returnString);
