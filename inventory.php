@@ -4,7 +4,7 @@
 
 <body>
 
-<h1>Manage Item Inventory</h1>
+<h1>AMS Item Inventory</h1>
 <?php
 
     require_once("includes/connection.php");
@@ -13,27 +13,56 @@
         printf("Connect failed: %s\n", mysqli_connect_error());
         exit();
     }
-    /****************************************************
-     STEP 2: Detect the user action
-
-     Next, we detect what the user did to arrive at this page
-     There are 3 possibilities 1) the first visit or a refresh,
-     2) by clicking the Delete link beside a book title, or
-     3) by clicking the bottom Submit button to add a book title
-     
-     NOTE We are using POST superglobal to safely pass parameters
-        (as opposed to URL parameters or GET)
-     ****************************************************/
-
+    // Update existing items
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-
+        if (isset($_POST["submit"]) && $_POST["submit"] ==  "UPDATE") {
+        
+        
+        $item_upc = $_POST["new_item_upc"];
+		$price = $_POST["new_unit_price"];
+        $quantity = $_POST["new_quantity"];
+        
+         if (ctype_digit($item_upc) == false || ctype_digit($price) == false || ctype_digit($quantity) == false) {
+ 			if(ctype_digit($item_upc) == false )
+ 		  	echo "<b>Please provide UPC in numerical value.</b><br>";
+ 		  	if (ctype_digit($price) == false) 
+ 		 	 echo "<b>Please provide Price in numerical value.</b><br>";
+ 		 	 if (ctype_digit($quantity) == false) 
+ 		 	 echo "<b>Please provide Quantity in numerical value.</b><br>";
+ 		  } else {
+        $old_q = "SELECT stock FROM Item WHERE upc = ?";
+        $r_stmt = $connection->prepare($old_q);
+        $r_stmt->bind_param("i", $item_upc);
+        $r_stmt->execute();
+        $result = $r_stmt->get_result();
+        
+        $entity = $result->fetch_assoc();
+        if($entity == NULL) {
+        echo"<b>Cannot find item</b>";
+        } else {
+        $old_quantity = $entity["stock"];
+        }
+        
+        $quantity += $old_quantity;
+       
+		if($item_upc == $item_upc) {
+    	$stmt = $connection->prepare("UPDATE Item SET price=?, stock = ? WHERE upc= ?");
+		$stmt->bind_param("dii", $price, $quantity, $item_upc);
+		$stmt->execute();       
+       }
+       if($stmt->error) {
+         printf("<b>Error: %s.</b>\n", $stmt->error);
+       } else {
+         echo "<b>Successfully updated: UPC ".$item_upc."</b>";
+       }
+       }
+}
       if (isset($_POST["submitDelete"]) && $_POST["submitDelete"] == "CLEAR") {
        /*
-          Delete the selected item title using the item_upc
+          Delete the selected item  using the item_upc
         */
        
        // Create a delete query prepared statement with a ? for the item_upc
-       //$stmt = $connection->prepare("DELETE FROM Item WHERE upc=?");
        $stmt = $connection->prepare("UPDATE Item SET stock = 0 WHERE upc = ?");
        $deleteUPC = $_POST['item_upc'];
        // Bind the title_id parameter, 's' indicates a string value
@@ -60,35 +89,51 @@
         $year = $_POST["new_year"];
 		$price = $_POST["new_unit_price"];
         $quantity = $_POST["new_quantity"];
-       
-    
+        
+ 		// Check if valid
+ 		if (ctype_digit($item_upc) == false || ctype_alpha($type) == false || ctype_alpha($category) == false || ctype_digit($year) == false || ctype_digit($price) == false || ctype_digit($quantity) == false) {
+ 			if(ctype_digit($item_upc) == false )
+ 		  	echo "<b>Please provide UPC in numerical value.</b><br>";
+ 		 	if(ctype_alpha($type) == false)
+ 		  	echo "<b>Please provide Type in one of the following types: cd or dvd.</b><br>";
+ 		  	if (ctype_alpha($category) == false) 
+ 		  	echo "<b>Please provide Category in one of the following types: rock, pop, rap, country, classical, new age or instrumental.</b><br>";
+ 		 	 if (ctype_digit($year) == false) 
+ 		  	echo "<b>Please provide Year in numerical value.</b><br>";
+ 		  	if (ctype_digit($price) == false) 
+ 		 	 echo "<b>Please provide Price in numerical value.</b><br>";
+ 		 	 if (ctype_digit($quantity) == false) 
+ 		 	 echo "<b>Please provide Quantity in numerical value.</b><br>";
+ 		  } else {
+
         $stmt = $connection->prepare("INSERT INTO Item (upc, title, type, category, company, year, price, stock) VALUES (?,?,?,?,?,?,?,?)");
         
         // Bind the title and pub_id parameters
         $stmt->bind_param("issssidi", $item_upc, $title, $type, $category, $company, $year, $price, $quantity);
         
         // If the provided upc already exits, Update
-        // Otherwise execute the insert statement
+        // Otherwise execute the insert statements
         	
-    	if($item_upc == $item_upc) {
-    			$stmt = $connection->prepare("UPDATE Item SET price=?, stock =? WHERE upc= ?");
-				$stmt->bind_param("dii", $price, $quantity, $item_upc);
-				$stmt->execute();
-			} else {
+    	//if($item_upc == $item_upc) {
+    	//		$stmt = $connection->prepare("UPDATE Item SET price=?, stock =? WHERE upc= ?");
+		//		$stmt->bind_param("dii", $price, $quantity, $item_upc);
+		//		$stmt->execute();
+		//	} else {
     			$stmt->execute();
-    		}
+    	//	}
+    		
     	if($stmt->error) {
          printf("<b>Error: %s.</b>\n", $stmt->error);
-       } elseif ($item_upc == NULL) {
-           	echo "<b>There was no item to be added. To add a new item, please specify all the fields. </b>";
-		} else {
+       } else {
          echo "<b>Successfully added: UPC ".$item_upc."</b>";
        }
     }    
    }
+   }
+   
 ?>
 
-<h2>Item Titles in Alphabetical Order</h2>
+<h2>Item Titles in Category Order</h2>
 <!-- Set up a table to view the book titles -->
 <table border=0 cellpadding=0 cellspacing=7>
 <!-- Create the table column headings -->
@@ -105,12 +150,9 @@
 </tr>
 
 <?php
-    /****************************************************
-     STEP 3: Select the most recent list of item titles
-     ****************************************************/
-
+    
    // Select all of the item rows columns upc, title and quantity...
-    if (!$result = $connection->query("SELECT upc, title, type, category, company, year, price, stock FROM Item ORDER BY title")) {
+    if (!$result = $connection->query("SELECT upc, title, type, category, company, year, price, stock FROM Item ORDER BY Category")) {
         die('There was an error running the query [' . $connection->error . ']');
     }
 
@@ -152,24 +194,15 @@
 
 </table>
 
-<h2>Add a New Item Title</h2>
+<h2>Add a New Item</h2>
 
-<!--
-  /****************************************************
-   STEP 5: Build the form to add a book title
-   ****************************************************/
-    Use an HTML form POST to add a book, sending the parameter values back to this page.
-    Avoid Cross-site scripting (XSS) by encoding PHP_SELF using htmlspecialchars.
 
-    This is the simplest way to POST values to a web page. More complex ways involve using
-    HTML elements other than a submit button (eg. by clicking on the delete link as shown above).
--->
 
 <form id="add" name="add" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
     <table border=0 cellpadding=1 cellspacing=>
         <tr><td>UPC:</td><td><input type="text" size=30 name="new_item_upc"</td></tr>
         <tr><td>Item Title:</td><td><input type="text" size=30 name="new_title"</td></tr>
-        <tr><td>Item Type CD/ DVD:</td><td> <input type="text" size=30 name="new_type"></td></tr>
+        <tr><td>Item Type:</td><td> <input type="text" size=30 name="new_type"></td></tr>
         <tr><td>Item Category:</td><td> <input type="text" size=30 name="new_category"></td></tr>
         <tr><td>Company Name:</td><td> <input type="text" size=30 name="new_company"></td></tr>
         <tr><td>Year:</td><td> <input type="text" size=30 name="new_year"></td></tr>
@@ -179,8 +212,20 @@
     </table>
 </form>
 
+<h2>Update an Existing Item</h2>
+
+
+
+<form id="add" name="add" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    <table border=0 cellpadding=1 cellspacing=>
+        <tr><td>UPC:</td><td><input type="text" size=30 name="new_item_upc"</td></tr>
+        <tr><td>Unit Price:</td><td> <input type="text" size=5 name="new_unit_price"></td></tr>
+        <tr><td>Quantity:</td><td> <input type="text" size=5 name="new_quantity"></td></tr>
+        <tr><td></td><td><input type="submit" name="submit" border=0 value="UPDATE"></td></tr>
+    </table>
+</form>
 <!--
-    Javascript to submit a title_id as a POST form, used with the "delete" links
+    Javascript to submit a title_id as a POST form, used with the "clear" links
 -->
 <script>
 function formSubmit(titleId) {
