@@ -31,6 +31,16 @@ if(mysqli_connect_errno()){
 
     if((!isset($_POST["year"])) ||(!isset($_POST["month"])) || (!isset($_POST["day"]))){
         Echo "Please specify a date.<br>";
+    } else if(!ctype_digit($_POST["year"]) || !ctype_digit($_POST["month"]) || !ctype_digit($_POST["day"])){
+        if(!ctype_digit($_POST["year"])){
+            echo "Invalid Year: Only numbers allowed <br>";
+        }
+        if(!ctype_digit($_POST["month"])){
+            echo "Invalid Month: Only numbers allowed <br>";
+        }
+        if(!ctype_digit($_POST["day"])){
+            echo "Invalid Day: Only numbers allowed <br>";
+        }
     } else {
     $year = intval($_POST["year"]);
     $month = intval($_POST["month"]);
