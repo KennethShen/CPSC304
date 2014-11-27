@@ -80,8 +80,9 @@ class Basket{
             // Start transaction.
             $connection->autocommit(false);
             // Insert the purchase information first.
-            $stmt = $connection->prepare("INSERT INTO Purchase(date, cid, cardNo, expiryDate) VALUES (?,?,?,?)");
-            $stmt->bind_param('siis',time(), $cid, $cardNo, $expiry);
+            $stmt = $connection->prepare("INSERT INTO Purchase(date, cid, cardNo, expiryDate) VALUES (CURRENT_DATE ,?,?,?)");
+            echo time("Y-m-d");
+            $stmt->bind_param('iis', $cid, $cardNo, $expiry);
 
             $result = $stmt->execute();
             // Make sure we have a purchase to add things to.
