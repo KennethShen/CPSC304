@@ -5,6 +5,7 @@
  * Date: 2014-11-13
  * Time: 11:18 PM
  */
+include_once("includes/header.php");
 include('session.php');
 ?>
 
