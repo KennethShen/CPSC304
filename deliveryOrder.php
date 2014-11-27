@@ -43,10 +43,12 @@ include_once("includes/header.php");
                     $stmt->bind_param("i", $rID);
                     $stmt->execute();
                     $result = $stmt->get_result();
-                    if ($result == NULL) {
+                    $entity = $result->fetch_assoc();
+                    if ($entity == NULL) {
                         echo "No purchase found with given receipt ID.<br>";
                     } else {
                         echo "Delivery Date successful updated. <br>";
+                        echo "The receipt with ID: " . $entity["receiptId"] ." now has the delivery date of ". $entity["deliveredDate"]."<br>";
                     }
                 } else {
                     echo " Please choose a future date. <br>";
@@ -55,8 +57,7 @@ include_once("includes/header.php");
                 echo "Please enter a valid date.<br>";
             }
         }
-    }
-    if(!isset($_POST["ReceiptID"]) && !isset($_POST["Year"]) && !isset($_POST["Month"]) && !isset($_POST["Day"])){
+    } else if(!isset($_POST["ReceiptID"]) && !isset($_POST["Year"]) && !isset($_POST["Month"]) && !isset($_POST["Day"])){
         echo "Enter the Receipt ID.<br>";
     } else if(isset($_POST["ReceiptID"])) {
         $rID = $_POST["ReceiptID"];
