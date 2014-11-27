@@ -22,15 +22,16 @@
 		$price = $_POST["new_unit_price"];
         $quantity = $_POST["new_quantity"];
         
-         if (ctype_digit($item_upc) == false || is_numeric($price) == false || ctype_digit($quantity) == false) {
+         if (ctype_digit($item_upc) == false || (!is_numeric($price) && !empty($price)) || ctype_digit($quantity) == false) {
  			if(ctype_digit($item_upc) == false )
  		  	echo "<b>Please provide UPC in numerical value.</b><br>";
  		  	if (is_numeric($price) == false) 
  		 	 echo "<b>Please provide Price in numerical value.</b><br>";
  		 	 if (ctype_digit($quantity) == false) 
  		 	 echo "<b>Please provide Quantity in numerical value.</b><br>";
- 		  } else {
-        $old_q = "SELECT stock FROM Item WHERE upc = ?";
+         } else {
+             $connection->autocommit(false);
+        $old_q = "SELECT stock, price FROM Item WHERE upc = ?";
         $r_stmt = $connection->prepare($old_q);
         $r_stmt->bind_param("i", $item_upc);
         $r_stmt->execute();
@@ -40,21 +41,28 @@
         if($entity == NULL) {
         echo"<b>Cannot find item</b>";
         } else {
-        $old_quantity = $entity["stock"];
+            $old_quantity = $entity["stock"];
+            if (empty($price)){
+                // Save old price if we didn't set a new one.
+                $price = $entity["price"];
+            }
         }
         
         $quantity += $old_quantity;
        
-		if($item_upc == $item_upc) {
+        if($item_upc == $item_upc) {
     	$stmt = $connection->prepare("UPDATE Item SET price=?, stock = ? WHERE upc= ?");
 		$stmt->bind_param("dii", $price, $quantity, $item_upc);
 		$stmt->execute();       
        }
        if($stmt->error) {
-         printf("<b>Error: %s.</b>\n", $stmt->error);
+           printf("<b>Error: %s.</b>\n", $stmt->error);
+           $connection->rollback();
        } else {
-         echo "<b>Successfully updated: UPC ".$item_upc."</b>";
+           echo "<b>Successfully updated: UPC ".$item_upc."</b>";
+           $connection->commit();
        }
+        $connection->autocommit(true);
        }
 }
       if (isset($_POST["submitDelete"]) && $_POST["submitDelete"] == "CLEAR") {
