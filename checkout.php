@@ -11,16 +11,35 @@ if (!isset($_SESSION['user_id'])){
     header("Location: shop.php");
 }
 else if (isset($_POST['submitPayment'])){
-    echo "Trying to pay.";
+    echo "Trying to pay.<br>";
     //TODO Validate. Possibly split expiry into month/year.
     $cardNo = $_POST['cardNo'];
-    $expiry = $_POST['expiry'];
-    echo $_POST['submitPayment'];
-    $receiptId = $basket->checkout($cardNo, $expiry);
+    $expYear = $_POST['year'];
+    $expMonth = $_POST['month'];
+    if(!ctype_digit($cardNo) || !ctype_digit($expYear) || !ctype_digit($expMonth)) {
+        if (!ctype_digit($cardNo)) {
+            echo "Invalid card number. Enter numbers only. <br>";
+        }
+        if (!ctype_digit($expYear)) {
+            echo "Invalid year. Enter numbers only.<br>";
+        }
+        if (!ctype_digit($expMonth)) {
+            echo "Invalid month. Enter numbers only.<br>";
+        }
+    } else {
+        if(checkdate(intval($expMonth), 1, intval($expYear))) {
+            echo $_POST['submitPayment'];
+            $expiry = $expYear."-".$expMonth."-01";
+            echo $expiry;
+            $receiptId = $basket->checkout($cardNo, $expiry);
 
-    echo "Receipt ID is ".$receiptId;
-    if ($receiptId){
-        header("Location: receipt.php?receiptId=".$receiptId);
+            echo "Receipt ID is " . $receiptId;
+            if ($receiptId) {
+                header("Location: receipt.php?receiptId=" . $receiptId);
+            }
+        } else {
+            echo "Invalid expiry date. <br>";
+        }
     }
 }
 ?>
@@ -67,8 +86,10 @@ if (!empty($contents)){
 <form id="payment" name="payment" method="POST">
 Card Number
 <input id="cardNo" name="cardNo"><br>
-Expiry Date
-<input id="expiry" name="expiry"><br>
+Expiry Date:<br> Year:
+<input id="expiry" name="year" maxlength = "4">
+Month:
+<input id="expiry" name="month" maxlength = "2"><br>
 <input type="submit" name="submitPayment" value="Pay Now">
 <?php
 //print_r($details);
