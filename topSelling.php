@@ -60,16 +60,17 @@ if(isset($_POST['submit'])) {
             $topstmt->bind_param("si", $date_top, $howmany);
             $topstmt->execute();
             $result = $topstmt->get_result();
-            while ($row = $result->fetch_assoc()) {
-                if($row == NULL){
-                    break;
+            if ($result->num_rows) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . $row['upc'] . "</td>";
+                    echo "<td>" . $row['category'] . "</td>";
+                    echo "<td>" . $row['price'] . "</td>";
+                    echo "<td>" . $row['total'] . "</td>";
+                    echo "</tr>";
                 }
-                echo "<tr>";
-                echo "<td>" . $row['upc'] . "</td>";
-                echo "<td>" . $row['category'] . "</td>";
-                echo "<td>" . $row['price'] . "</td>";
-                echo "<td>" . $row['total'] . "</td>";
-                echo "</tr>";
+            } else {
+                echo "<br>Sorry, no purchase was made on that day!<br>";
             }
         }
         else {
