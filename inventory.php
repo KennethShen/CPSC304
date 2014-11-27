@@ -22,10 +22,10 @@
 		$price = $_POST["new_unit_price"];
         $quantity = $_POST["new_quantity"];
         
-         if (ctype_digit($item_upc) == false || ctype_digit($price) == false || ctype_digit($quantity) == false) {
+         if (ctype_digit($item_upc) == false || is_numeric($price) == false || ctype_digit($quantity) == false) {
  			if(ctype_digit($item_upc) == false )
  		  	echo "<b>Please provide UPC in numerical value.</b><br>";
- 		  	if (ctype_digit($price) == false) 
+ 		  	if (is_numeric($price) == false) 
  		 	 echo "<b>Please provide Price in numerical value.</b><br>";
  		 	 if (ctype_digit($quantity) == false) 
  		 	 echo "<b>Please provide Quantity in numerical value.</b><br>";
@@ -91,7 +91,7 @@
         $quantity = $_POST["new_quantity"];
         
  		// Check if valid
- 		if (ctype_digit($item_upc) == false || ctype_alpha($type) == false || ctype_alpha($category) == false || ctype_digit($year) == false || ctype_digit($price) == false || ctype_digit($quantity) == false) {
+ 		if (ctype_digit($item_upc) == false || ctype_alpha($type) == false || ctype_alpha($category) == false || ctype_digit($year) == false || is_numeric($price) == false || ctype_digit($quantity) == false) {
  			if(ctype_digit($item_upc) == false )
  		  	echo "<b>Please provide UPC in numerical value.</b><br>";
  		 	if(ctype_alpha($type) == false)
@@ -100,7 +100,7 @@
  		  	echo "<b>Please provide Category in one of the following types: rock, pop, rap, country, classical, new age or instrumental.</b><br>";
  		 	 if (ctype_digit($year) == false) 
  		  	echo "<b>Please provide Year in numerical value.</b><br>";
- 		  	if (is_float($price) == false) 
+ 		  	if (is_numeric($price) == false) 
  		 	 echo "<b>Please provide Price in numerical value.</b><br>";
  		 	 if (ctype_digit($quantity) == false) 
  		 	 echo "<b>Please provide Quantity in numerical value.</b><br>";
