@@ -55,7 +55,8 @@ include_once("header.php");
                 echo "Please enter a valid date.<br>";
             }
         }
-    } else if(!isset($_POST["ReceiptID"]) && !isset($_POST["Year"]) && !isset($_POST["Month"]) && !isset($_POST["Day"])){
+    }
+    if(!isset($_POST["ReceiptID"]) && !isset($_POST["Year"]) && !isset($_POST["Month"]) && !isset($_POST["Day"])){
         echo "Enter the Receipt ID.<br>";
     } else if(isset($_POST["ReceiptID"])) {
         $rID = $_POST["ReceiptID"];
