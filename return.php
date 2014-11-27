@@ -7,7 +7,6 @@ include_once("includes/header.php");
 <body>
 <br>
 <form action = "" method = "post">
-    Customer ID: <input type = "text" name = "cid"><br>
     Receipt ID: <input type = "text" name = "receiptId"><br>
     Item UPC  : <input type = "text" name = "UPC"><br>
     Quantity  : <input type = "text" name = "returnQuantity"><br>
@@ -15,11 +14,7 @@ include_once("includes/header.php");
 </form>
 <?php
 echo "Please enter your Customer ID, Receipt ID, UPC of the item you wish to return, <br> and the quantity of the item that you are returning.<br>";
-if(!isset($_POST["cid"]) || !isset($_POST["receiptId"]) || !isset($_POST["UPC"]) || !isset($_POST["returnQuantity"])){
-} else if(!ctype_digit($_POST["cid"]) || !ctype_digit($_POST["receiptId"]) || !ctype_digit($_POST["UPC"]) || !ctype_digit($_POST["returnQuantity"]) ){
-    if(!ctype_digit($_POST["cid"])){
-        echo "Invalid Customer ID: Only numbers allowed <br>";
-    }
+if( !ctype_digit($_POST["receiptId"]) || !ctype_digit($_POST["UPC"]) || !ctype_digit($_POST["returnQuantity"]) ){
     if(!ctype_digit($_POST["receiptId"])){
         echo "Invalid Receipt ID: Only numbers allowed <br>";
     }
@@ -31,14 +26,13 @@ if(!isset($_POST["cid"]) || !isset($_POST["receiptId"]) || !isset($_POST["UPC"])
     }
 } else {
 
-    $cid = intval($_POST["cid"]);
     $rid = intval($_POST["receiptId"]);
     $upc = intval($_POST["UPC"]);
     $quantity = intval($_POST["returnQuantity"]);
     $queryString = "SELECT pi.receiptId, pi.quantity, p.date, i.price FROM Purchase p, PurchaseItem pi, Item i WHERE p.receiptId = pi.receiptId" .
-        " AND i.upc = pi.upc AND pi.upc = ? AND pi.receiptId = ? AND p.cid = ?";
+        " AND i.upc = pi.upc AND pi.upc = ? AND pi.receiptId = ?";
     $stmt = $connection->prepare($queryString);
-    $stmt->bind_param("iii", $upc, $rid, $cid);
+    $stmt->bind_param("ii", $upc, $rid);
     $stmt->execute();
     $result = $stmt->get_result();
     $search = $result->fetch_assoc();
