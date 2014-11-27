@@ -5,18 +5,23 @@ require_once(dirname(__FILE__)."/classes/Basket.php");
     ?>
 
 <?php
-session_start();
 $basket = new Basket();
-if (isset($_POST['submitPayment'])){
+if (!isset($_SESSION['user_id'])){
+    // User not logged in. Redirect.
+    header("Location: shop.php");
+}
+else if (isset($_POST['submitPayment'])){
+    echo "Trying to pay.";
     //TODO Validate. Possibly split expiry into month/year.
     $cardNo = $_POST['cardNo'];
     $expiry = $_POST['expiry'];
     echo $_POST['submitPayment'];
     $receiptId = $basket->checkout($cardNo, $expiry);
+
     echo "Receipt ID is ".$receiptId;
-} else if (!isset($_POST['user_id'])){
-    // User not logged in. Redirect.
-    header("shop.php");
+    if ($receiptId){
+        header("Location: receipt.php?receiptId=".$receiptId);
+    }
 }
 ?>
 <table>
@@ -42,9 +47,9 @@ if (!empty($contents)){
 
         echo '<tr style="text-align: right">';
         echo '<td>'.$details[$item_upc]['title'].'</td>';
-        echo '<td>'.money_format('%10.2n', $unit_price).'</td>';
+        echo '<td>'.$unit_price.'</td>';
         echo '<td>'.$unit_qty.'</td>';
-        echo '<td>'.money_format('%10.2n',$subtotal).'</td>';
+        echo '<td>'.$subtotal.'</td>';
         echo '</tr>';
     } 
 } else {
@@ -54,7 +59,7 @@ if (!empty($contents)){
 </tbody>
 <tfoot><tr>
 <th colspan=3 style="text-align: right">Total</th>
-<th><?php echo money_format('%10.2n',$totalprice) ?></td>
+<th><?php echo $totalprice ?></td>
 </tr></tfoot>
 </table>
 <br>

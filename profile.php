@@ -6,7 +6,6 @@
  * Time: 11:18 PM
  */
 include_once("includes/header.php");
-include('session.php');
 ?>
 
 <!DOCTYPE html>
@@ -17,7 +16,7 @@ include('session.php');
 </head>
 <body>
 <div id="profile">
-    <p id="welcome">Welcome : <i><?php echo $_SESSION['login_user']; ?></i></p>
+    <p id="welcome">Welcome : <i><?php echo $_SESSION['username']; ?></i></p>
     <p><a href="logout.php"><button type="button">LOG OUT</button></a></p>
 </div>
 </body>

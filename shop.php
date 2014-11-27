@@ -2,30 +2,35 @@
 include_once('includes/connection.php');
 include_once('./classes/Basket.php');
 include_once('includes/header.php');
-session_start();
 
-    echo '<a href="checkout.php"> Checkout </a>';
 
+    echo "<h1>Online Store</h1>";
+if (isset($_SESSION['user_id'])){
+    echo '<a href="checkout.php"> Checkout </a><br>';
+} else {
+    echo 'Please login to checkout.';
+}
     echo "<form id='Search' method='post'>";
-    echo "<input name='find_title'>";
+    echo "Title";
+    echo "<input name='find_title'><br>";
+    echo "Category";
     echo "<select name='find_category'>";
     echo "<option value ='' selected='selected'>";
     $categories = ['rock', 'pop', 'rap', 'country', 'classical', 'new age', 'instrumental'];
     foreach ($categories as $cat){
         echo "<option value='$cat'>$cat</option>";
     }
-    echo "</select>";
-    echo '<input name="find_leadsinger">';
-    echo '<input name="want_qty">';
+    echo "</select><br>";
+    echo 'Lead Singer';
+    echo '<input name="find_leadsinger"><br>';
+    echo "quantity to buy";
+    echo '<input name="want_qty"><br>';
     echo '<input type="submit" name="submit" value="Search">';
     echo '</form>';
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         if (isset($_POST["submit"]) && $_POST["submit"] == "Search") {
-       /*
-        Add a book title using the post variables title_id, title and pub_id.
-        */
 
         $title = "%".$_POST["find_title"]."%";
         $category = $_POST["find_category"];
@@ -78,7 +83,6 @@ session_start();
 
             $result = $stmt->get_result();
             while($row = $result->fetch_assoc()){
-print_r($row);
                 echo "<td>".$row['upc']."</td>";
                 echo "<td>".$row['title']."</td>";
                 echo "<td>".$row['category']."</td>";
@@ -90,7 +94,6 @@ print_r($row);
             }
             echo "</table>";
         }
-        print_r($_SESSION);
       } else if (isset($_POST['SUBMITADD']) && $_POST['SUBMITADD'] == "basket"){
           $basket = new Basket();
           $basket->addItem($_POST['want_upc'],$_POST['add_qty']);

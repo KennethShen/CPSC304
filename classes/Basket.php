@@ -26,7 +26,6 @@ class Basket{
         }
         $result = $stmt->get_result();
         if ($row = $result->fetch_assoc()){
-            print_r($row);
             $stock = $row['stock'];
         }
         if ($stock >= $qty){

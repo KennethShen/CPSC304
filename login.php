@@ -7,7 +7,6 @@
  */
 require_once("includes/connection.php");
 include_once("includes/header.php");
-session_start(); //starting session
 $error=''; //variable to store error message
 
 
@@ -24,10 +23,10 @@ if(isset($_POST['submit'])) {
 
         $retrieved_password = null;
        //$check_query = "SELECT username, password FROM Customer WHERE username=? AND password=?";
-        if ($log_check = $connection->prepare("SELECT password FROM Customer WHERE username=?")) {
+        if ($log_check = $connection->prepare("SELECT cid, password FROM Customer WHERE username=?")) {
             $log_check->bind_param("s", $form_username);
             $log_check->execute();
-            $log_check->bind_result($retrieved_password);
+            $log_check->bind_result($cid, $retrieved_password);
             $log_check->store_result();
             $log_check->fetch();
             $num = $log_check->num_rows;
@@ -37,8 +36,9 @@ if(isset($_POST['submit'])) {
                 // use function password_verify( $password, $hash ) to check user inputted password vs hash
                 if(password_verify($form_password, $retrieved_password)){
                     echo "yay";
-                    $_SESSION['login_user'] = $form_username; //Initializing session
-                    $_SESSION['user_id'];
+                    $_SESSION['username'] = $form_username; //Initializing session
+                    // Store cid on login.
+                    $_SESSION['user_id'] = $cid;
                     header('Location: profile.php'); //Redirecting to other page
                     $log_check->free_result();
 
